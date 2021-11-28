@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# git에 주요 설정 파일이 커밋되는 것을 막기 위한 설정 파일
 
 # dependencies
 /node_modules
