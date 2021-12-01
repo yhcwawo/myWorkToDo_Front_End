@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
 
-function NotFound(){
-    return "Not Found";
+function WorkList(){
+    return "WorkList";
 }
 
-export default NotFound;
+export default WorkList;

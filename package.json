@@ -13,6 +13,7 @@
     "react-hook-form": "^7.20.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "recharts": "^2.1.6",
     "recoil": "^0.5.2",
     "styled-components": "^5.3.3"
   },

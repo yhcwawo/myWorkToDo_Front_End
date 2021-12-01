@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
 
-function NotFound(){
-    return "Not Found";
+function GroupList(){
+    return "GroupList";
 }
 
-export default NotFound;
+export default GroupList;
