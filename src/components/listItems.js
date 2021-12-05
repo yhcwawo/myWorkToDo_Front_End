@@ -11,10 +11,11 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Link } from 'react-router-dom';
 import routes from '../routes';
 
+//좌측 메뉴 컨트롤
 export const mainListItems = (
   <div>
 
-    <Link to={routes.main}>
+    <Link to={routes.main} style={{ textDecoration: 'none' }}>
     <ListItem button>
        
       <ListItemIcon>
@@ -25,7 +26,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
 
-    <Link to={routes.workList}>
+    <Link to={routes.workList} style={{ textDecoration: 'none' }}>
     <ListItem button>
 
       <ListItemIcon>
@@ -36,7 +37,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
 
-    <Link to={routes.groupList}>
+    <Link to={routes.groupList} style={{ textDecoration: 'none' }}>
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
@@ -45,7 +46,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
 
-    <Link to={routes.groupStatic}>
+    <Link to={routes.groupStatic} style={{ textDecoration: 'none' }}>
     <ListItem button>
       <ListItemIcon>
         <BarChartIcon />

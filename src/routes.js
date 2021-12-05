@@ -1,6 +1,6 @@
 const routes = {
     main: "/",
-    workList: "/work",
+    workList: "/workList",
     workRegist: "/workRegist",
     work: "/work/:id",
     groupList: "/groupList",

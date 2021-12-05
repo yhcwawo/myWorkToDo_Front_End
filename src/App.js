@@ -29,7 +29,7 @@ function App() {
                   <WorkRegist />
               </Route>
 
-              <Route path={routes.work} >
+              <Route path={routes.work}>
                   <WorkDetail />
               </Route>
 

@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -14,13 +13,13 @@ import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from '../components/listItems';
+import { mainListItems } from '../components/listItems';
+
 import Chart from '../components/Chart';
 import WorkRecent from '../components/WorkRecent';
+import Title from '../components/Title';
 
 //box 가로 크기 지정
 const drawerWidth = 240;
@@ -133,12 +132,15 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            My work to do
+            Main
           </Typography>
 
           <IconButton color="inherit">
             <Badge color="secondary">
-              <NotificationsIcon />
+
+            <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
+              User
+            </Typography>
             </Badge>
           </IconButton>
 
