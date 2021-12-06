@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,9 +18,9 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
+import { useRecoilState } from "recoil";
+import { toDoState } from "../components/atom";
 
-import Chart from '../components/Chart';
-import WorkRecent from '../components/WorkRecent';
 
 //box width size
 const drawerWidth = 240;
@@ -103,6 +104,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//detail part
+const Wrapper = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  margin: 0 auto;
+
+`;
+
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, 1fr);
+`;
+
+const Board = styled.div`
+  padding: 20px 10px;
+  padding-top: 30px;
+  background-color: skyblue;
+  border-radius: 5px;
+  min-height: 200px;
+`;
+
+const Card = styled.div`
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 10px 10px;
+  background-color: white;
+`;
+
+
 export default function WorkDetail() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -113,6 +148,24 @@ export default function WorkDetail() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  //recoilstate는 array를 return 함
+  const onDragEnd = ({ draggableId, destination, source } ) => {
+    if (!destination) return;
+    setToDos((oldToDos) => {
+      const toDosCopy = [...oldToDos];
+      // 1) Delete item on source.index
+
+      toDosCopy.splice(source.index, 1);
+
+      // 2) Put back the item on the destination.index
+
+      toDosCopy.splice(destination?.index, 0, draggableId);
+ 
+      return toDosCopy;
+    });
+  };
 
   //insert main dashboard
   return (
@@ -172,19 +225,43 @@ export default function WorkDetail() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             
-            {/* Recent My Work */}
+            {/* Work Process Part */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <WorkRecent />
-              </Paper>
+
+              <DragDropContext onDragEnd={onDragEnd}>
+              <Wrapper>
+                <Boards>
+                  <Droppable droppableId="one">
+                    {(swipe) => (
+                      <Board ref={swipe.innerRef} {...swipe.droppableProps}>
+                        {toDos.map((toDo, index) => (
+                          <Draggable key={toDo} draggableId={toDo} index={index}>
+                            {(swipe) => (
+                              <Card
+                                ref={swipe.innerRef}
+                                {...swipe.dragHandleProps}
+                                {...swipe.draggableProps}
+                              >
+                                {toDo}
+                              </Card>
+                            )}
+                          </Draggable>
+                        ))}
+                        {/* block chaning box size  */}
+                        {swipe.placeholder}
+                      </Board>
+                    )}
+                  </Droppable>
+                </Boards>
+              </Wrapper>
+
+              </DragDropContext>
+
+
+     
             </Grid>
 
-            {/* Group Task Chart */}
-            <Grid item xs={12}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
+
 
           </Grid>
 

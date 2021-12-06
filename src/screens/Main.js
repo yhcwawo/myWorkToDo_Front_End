@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,6 +20,8 @@ import { mainListItems } from '../components/listItems';
 import Chart from '../components/Chart';
 import WorkRecent from '../components/WorkRecent';
 import Title from '../components/Title';
+import API from '../components/axios';
+import axios from 'axios';
 
 //box 가로 크기 지정
 const drawerWidth = 240;
@@ -114,8 +116,20 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+
+  axios.get("http://localhost:8080/user/all")
+  .then(function (response) {
+       // response  
+       console.log(response);
+  }).catch(function (error) {
+      // 오류발생시 실행
+  }).then(function() {
+      // 항상 실행
+  });
+
+
   //main dashboard 랜더링
-  //main은 컨테이너만 잡고 컴포넌트 호출로 2단 구성 할 예정
+  //main은 컨테이너만 잡고 컴포넌트 호출로 2단 구성
   return (
     <div className={classes.root}>
       <CssBaseline />
