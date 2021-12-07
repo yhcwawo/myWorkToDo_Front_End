@@ -12,25 +12,65 @@ import NotFound from "./screens/NotFound";
 
 
 function App() {
+
+    const isLoggedIn = false;
+
   return (
     
      <Router>
             <Switch>
 
               <Route path={routes.main} exact>
-                  <Main />
+              {isLoggedIn ? (
+                <Main />
+              ) : (
+                <SignIn />
+              )}
+                  
               </Route>
 
               <Route path={routes.workList} >
-                  <WorkList />
+              {isLoggedIn ? (
+                <WorkList />
+              ) : (
+                <SignIn />
+              )}
+
               </Route>
 
               <Route path={routes.workRegist} >
-                  <WorkRegist />
+              {isLoggedIn ? (
+                <WorkRegist />
+              ) : (
+                <SignIn />
+              )}
+
               </Route>
 
               <Route path={routes.work}>
-                  <WorkDetail />
+              {isLoggedIn ? (
+                <WorkDetail />
+              ) : (
+                <SignIn />
+              )}
+              </Route>
+
+              <Route path={routes.groupList} >
+              {isLoggedIn ? (
+                <GroupList />
+              ) : (
+                <SignIn />
+              )}
+
+              </Route>
+
+              <Route path={routes.groupStatic} >
+              {isLoggedIn ? (
+                <GroupStatic />
+              ) : (
+                <SignIn />
+              )}
+                  
               </Route>
 
               <Route path={routes.signIn} >
@@ -39,14 +79,6 @@ function App() {
 
               <Route path={routes.signUp} >
                   <SignUp />
-              </Route>
-
-              <Route path={routes.groupList} >
-                  <GroupList />
-              </Route>
-
-              <Route path={routes.groupStatic} >
-                  <GroupStatic />
               </Route>
 
               <Route>

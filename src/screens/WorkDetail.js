@@ -14,12 +14,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
 import { useRecoilState } from "recoil";
 import { toDoState } from "../components/atom";
+import Board from "../components/Board";
 
 
 //box width size
@@ -108,7 +108,6 @@ const useStyles = makeStyles((theme) => ({
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  max-width: 480px;
   justify-content: center;
   align-items: center;
   height: 80vh;
@@ -117,24 +116,11 @@ const Wrapper = styled.div`
 `;
 
 const Boards = styled.div`
-  display: grid;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  grid-template-columns: repeat(1, 1fr);
-`;
-
-const Board = styled.div`
-  padding: 20px 10px;
-  padding-top: 30px;
-  background-color: skyblue;
-  border-radius: 5px;
-  min-height: 200px;
-`;
-
-const Card = styled.div`
-  border-radius: 5px;
-  margin-bottom: 5px;
-  padding: 10px 10px;
-  background-color: white;
+  gap: 10px;
 `;
 
 
@@ -151,20 +137,43 @@ export default function WorkDetail() {
 
   const [toDos, setToDos] = useRecoilState(toDoState);
   //recoilstate는 array를 return 함
-  const onDragEnd = ({ draggableId, destination, source } ) => {
+  const onDragEnd = (info) => {
+    const { destination, draggableId, source } = info;
     if (!destination) return;
-    setToDos((oldToDos) => {
-      const toDosCopy = [...oldToDos];
-      // 1) Delete item on source.index
+    //목표 object 없으면 그냥 return
+    if (destination?.droppableId === source.droppableId) {
 
-      toDosCopy.splice(source.index, 1);
+      //toDoState 데이터가 들어옴
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        //옮긴 테스크 삭제
+        boardCopy.splice(destination?.index, 0, draggableId);
+        //옮기고 복구
+        return {
+          ...allBoards,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    }
 
-      // 2) Put back the item on the destination.index
+    // board 이동하기
+    if (destination.droppableId !== source.droppableId) {
+      
+      setToDos((allBoards) => {
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destinationBoard = [...allBoards[destination.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination?.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destinationBoard,
+        };
+      });
+    }
 
-      toDosCopy.splice(destination?.index, 0, draggableId);
- 
-      return toDosCopy;
-    });
+
   };
 
   //insert main dashboard
@@ -231,40 +240,15 @@ export default function WorkDetail() {
               <DragDropContext onDragEnd={onDragEnd}>
               <Wrapper>
                 <Boards>
-                  <Droppable droppableId="one">
-                    {(swipe) => (
-                      <Board ref={swipe.innerRef} {...swipe.droppableProps}>
-                        {toDos.map((toDo, index) => (
-                          <Draggable key={toDo} draggableId={toDo} index={index}>
-                            {(swipe) => (
-                              <Card
-                                ref={swipe.innerRef}
-                                {...swipe.dragHandleProps}
-                                {...swipe.draggableProps}
-                              >
-                                {toDo}
-                              </Card>
-                            )}
-                          </Draggable>
-                        ))}
-                        {/* block chaning box size  */}
-                        {swipe.placeholder}
-                      </Board>
-                    )}
-                  </Droppable>
+                  {Object.keys(toDos).map((boardId) => (
+                    <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
+                  ))}
                 </Boards>
               </Wrapper>
 
               </DragDropContext>
-
-
-     
             </Grid>
-
-
-
           </Grid>
-
         </Container>
       </main>
     </div>
