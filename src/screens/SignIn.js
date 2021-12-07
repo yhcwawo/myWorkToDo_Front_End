@@ -76,17 +76,6 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-          />
-
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
             name="password"
             label="Password"
             type="password"
@@ -101,7 +90,7 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            로그인
           </Button>
           <Grid container>
             <Grid item xs>
@@ -110,7 +99,7 @@ export default function SignIn() {
             <Grid item>
                 <Link to={routes.signUp} style={{ textDecoration: 'none' }}>
                   <Button>
-                  {"Simple Sign up!"}
+                  {"간편 회원가입"}
                   </Button>
                 </Link>
             </Grid>

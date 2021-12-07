@@ -17,11 +17,79 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
+import { DataGrid } from '@material-ui/data-grid';
+import { Link } from "react-router-dom";
+import routes from "../routes";
+import { Button } from "@material-ui/core";
+import SaveIcon from '@material-ui/icons/Save';
 
-import Chart from '../components/Chart';
-import WorkRecent from '../components/WorkRecent';
+//data grid for work
+// id == essential value
+const columns = [
+  { field: 'id', 
+  headerName: 'ID', 
+  width: 120,
+  editable: false,
+  },
+  {
+    field: 'work_name',
+    headerName: '워크 이름',
+    width: 150,
+    editable: false,
+   
+  },
+// ${params.getValue("id")}
+  {
+    field: 'group_name',
+    headerName: '워크 그룹',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'user_name',
+    headerName: '그룹장',
+    width: 120,
+    editable: false,
+  },
+  {
+    field: 'team',
+    headerName: '팀명',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'group_number',
+    headerName: '그룹원 수',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'created_date',
+    headerName: '생성일',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'to_date',
+    headerName: '마감기한',
+    width: 150,
+    editable: false,
+  },
+];
 
-//box 가로 크기 지정
+const rows = [
+  { id: 1, work_name: 'Snow' ,group_name: 'Jon', user_name: 'Jon', team: 'Jon', group_number: 35, created_date: '2021-11-30',to_date: '2021-12-17' },
+  { id: 2, work_name: 'Lannister', group_name: 'Cersei', user_name: 'Jon',team: 'Jon',  group_number: 42, created_date: '2021-11-30',to_date: '2021-12-17' },
+  { id: 3, work_name: 'Lannister', group_name: 'Jaime', user_name: 'Jon',team: 'Jon',  group_number: 45 , created_date: '2021-11-30',to_date: '2021-12-17'},
+  { id: 4, work_name: 'Stark', group_name: 'Arya', user_name: 'Jon', team: 'Jon', group_number: 16, created_date: '2021-11-30' ,to_date: '2021-12-17'},
+  { id: 5, work_name: 'Targaryen', group_name: 'Daenerys', user_name: 'Jon', team: 'Jon', group_number: null, created_date: '2021-11-30' ,to_date: '2021-12-17'},
+  { id: 6, work_name: 'Melisandre', group_name: null, user_name: 'Jon', team: 'Jon', group_number: 150, created_date: '2021-11-30' ,to_date: '2021-12-17'},
+  { id: 7, work_name: 'Clifford', group_name: 'Ferrara', user_name: 'Jon', team: 'Jon', group_number: 44, created_date: '2021-11-30' ,to_date: '2021-12-17'},
+  { id: 8, work_name: 'Frances', group_name: 'Rossini', user_name: 'Jon', team: 'Jon', group_number: 36 , created_date: '2021-11-30',to_date: '2021-12-17'},
+  { id: 9, work_name: 'Roxie', group_name: 'Harvey', user_name: 'Jon', team: 'Jon', group_number: 65, created_date: '2021-11-30' ,to_date: '2021-12-17'},
+];
+
+//가로 크기 지정
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -101,6 +169,9 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 export default function WorkList() {
@@ -131,7 +202,7 @@ export default function WorkList() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            My work list
+            나의 워크 리스트
           </Typography>
 
           <IconButton color="inherit">
@@ -172,19 +243,33 @@ export default function WorkList() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             
-            {/* Recent My Work */}
+            {/* Work list */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <WorkRecent />
-              </Paper>
+
+              <Link to={routes.workRegist}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                등록
+              </Button>
+              </Link>
+
+              <div style={{ height: 400, width: '100%' }}>
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                checkboxSelection
+                disableSelectionOnClick
+              />
+              </div>
             </Grid>
 
-            {/* Group Task Chart */}
-            <Grid item xs={12}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
+     
 
           </Grid>
 

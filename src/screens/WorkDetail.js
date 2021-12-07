@@ -184,7 +184,7 @@ export default function WorkDetail() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Work Detail
+            워크 상세
           </Typography>
 
           <IconButton color="inherit">

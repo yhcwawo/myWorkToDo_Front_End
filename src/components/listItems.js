@@ -22,7 +22,7 @@ export const mainListItems = (
         <DashboardIcon />
       </ListItemIcon>
       
-      <ListItemText primary="Main" />
+      <ListItemText primary="메인" />
     </ListItem>
     </Link>
 
@@ -33,7 +33,7 @@ export const mainListItems = (
         <LayersIcon />
       </ListItemIcon>
     
-      <ListItemText primary="Work List" />
+      <ListItemText primary="워크 리스트" />
     </ListItem>
     </Link>
 
@@ -42,7 +42,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Group List" />
+      <ListItemText primary="그룹 라스트" />
     </ListItem>
     </Link>
 
@@ -51,7 +51,7 @@ export const mainListItems = (
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="Group Statistics" />
+      <ListItemText primary="그룹 통계" />
     </ListItem>
     </Link>
 
@@ -61,12 +61,6 @@ export const mainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Sub menu</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="sing up" />
-    </ListItem>
     <ListItem button>
       <ListItemIcon>
         <AssignmentIcon />

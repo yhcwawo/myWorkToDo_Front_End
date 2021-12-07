@@ -146,7 +146,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Main
+            메인
           </Typography>
 
           <IconButton color="inherit">
@@ -176,7 +176,6 @@ export default function Dashboard() {
         </div>
         <Divider />
         <List>{mainListItems}</List>
-
         <Divider />
 
       </Drawer>

@@ -18,11 +18,17 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
 
-import Chart from '../components/Chart';
-import WorkRecent from '../components/WorkRecent';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import { Link } from 'react-router-dom';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import routes from '../routes';
 
-
-//box 가로 크기 지정
+//가로 크기 지정
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -98,6 +104,18 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', 
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
   },
   fixedHeight: {
     height: 240,
@@ -132,7 +150,7 @@ export default function WorkRegist() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Work Regist
+            워크 등록
           </Typography>
 
           <IconButton color="inherit">
@@ -170,25 +188,105 @@ export default function WorkRegist() {
         <div className={classes.appBarSpacer} />
 
 
-        <Container maxWidth="lg" className={classes.container}>
+        <Container maxWidth="sm" className={classes.container}>
           <Grid container spacing={3}>
             
-            {/* Recent My Work */}
+            {/* Regist page */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <WorkRecent />
-              </Paper>
-            </Grid>
+           
 
-            {/* Group Task Chart */}
-            <Grid item xs={12}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
+              <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+
+                  <Typography component="h1" variant="h5">
+                    워크 등록
+                  </Typography>
+                  <form className={classes.form} noValidate>
+                    <Grid container spacing={2}>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="name"
+                          label="이름"
+                          name="name"
+                          autoComplete="lname"
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Email 주소"
+                          name="email"
+                          autoComplete="email"
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Email 주소"
+                          name="email"
+                          autoComplete="email"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="team"
+                          label="팀 이름"
+                          name="team"
+                          autoComplete="team"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          name="password"
+                          label="Password"
+                          id="password"
+                        />
+                      </Grid>
+     
+                    </Grid>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
+                    >
+                      등록하기
+                    </Button>
+                    <Grid container justifyContent="flex-end">
+                      <Grid item>
+                        <Link to={routes.workList} style={{ textDecoration: 'none' }}>
+                          워크 리스트 돌아가기
+                        </Link>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </div>
+
+              </Container>
+
               </Paper>
             </Grid>
 
           </Grid>
-
         </Container>
       </main>
     </div>

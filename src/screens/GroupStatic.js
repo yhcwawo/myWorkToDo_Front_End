@@ -18,16 +18,23 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
 
-import Chart from '../components/Chart';
-import WorkRecent from '../components/WorkRecent';
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 //box 가로 크기 지정
 const drawerWidth = 240;
+const TAX_RATE = 0.07;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+  },
+  table: {
+    minWidth: 700,
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -104,6 +111,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function ccyFormat(num) {
+  return `${num.toFixed(2)}`;
+}
+
+function priceRow(qty, unit) {
+  return qty * unit;
+}
+
+function createRow(desc, qty, unit) {
+  const price = priceRow(qty, unit);
+  return { desc, qty, unit, price };
+}
+
+function subtotal(items) {
+  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
+}
+
+const rows = [
+  createRow('Paperclips (Box)', 100, 1.15),
+  createRow('Paper (Case)', 10, 45.99),
+  createRow('Waste Basket', 2, 17.99),
+];
+
+const invoiceSubtotal = subtotal(rows);
+const invoiceTaxes = TAX_RATE * invoiceSubtotal;
+const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+
 export default function GroupStatic() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -133,7 +167,7 @@ export default function GroupStatic() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Group Statistics
+            그룹 통계
           </Typography>
 
           <IconButton color="inherit">
@@ -170,22 +204,55 @@ export default function GroupStatic() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
 
-
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             
-            {/* Recent My Work */}
+            {/* group statistics */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <WorkRecent />
-              </Paper>
-            </Grid>
+            <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="spanning table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" colSpan={3}>
+                    주간 워크 그룹 통계
+                  </TableCell>
+                  <TableCell align="right">(내가 소속된 워크 그룹)</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Desc</TableCell>
+                  <TableCell align="right">Qty.</TableCell>
+                  <TableCell align="right">Unit</TableCell>
+                  <TableCell align="right">Sum</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <TableRow key={row.desc}>
+                    <TableCell>{row.desc}</TableCell>
+                    <TableCell align="right">{row.qty}</TableCell>
+                    <TableCell align="right">{row.unit}</TableCell>
+                    <TableCell align="right">{ccyFormat(row.price)}</TableCell>
+                  </TableRow>
+                ))}
 
-            {/* Group Task Chart */}
-            <Grid item xs={12}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
+                <TableRow>
+                  <TableCell rowSpan={3} />
+                  <TableCell colSpan={2}>Subtotal</TableCell>
+                  <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Tax</TableCell>
+                  <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
+                  <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2}>Total</TableCell>
+                  <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          
             </Grid>
 
           </Grid>

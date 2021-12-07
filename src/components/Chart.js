@@ -25,7 +25,7 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Weekly My Works</Title>
+      <Title>주간 테스크 요약</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}

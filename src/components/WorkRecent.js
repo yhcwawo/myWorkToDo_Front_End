@@ -8,17 +8,20 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 import routes from '../routes';
+import { Button } from '@material-ui/core';
 
 // Generate WorkRecent Data
-function createData(id, date, name, shipTo, paymentMethod, amount, func) {
-  return { id, date, name, shipTo, paymentMethod, amount, func };
+function createData(id, work_name, group_name, group_leader,team, group_number, created_date, to_date) {
+  return { id, work_name, group_name, group_leader,team, group_number, created_date, to_date };
 }
 
 const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44, '삭제'),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99, '삭제'),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81, '삭제'),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39, '삭제'),
+  createData(1, 'Snow', 'Elvis Presley', 'Jon', '페이북개발팀',312.44, '2021-11-30','2021-12-17' ),
+  createData(2, 'Lannister', 'Paul McCartney', 'Jon', '페이북개발팀', 866.99, '2021-11-30','2021-12-17' ),
+  createData(3, 'Lannister', 'Tom Scholz',  'Jon', '페이북개발팀',100.81, '2021-11-30','2021-12-17' ),
+  createData(4, 'Stark', 'Michael Jackson', 'Gary, IN', '페이북개발팀',654.39, '2021-11-30','2021-12-17' ),
+
+  
 ];
 
 function preventDefault(event) {
@@ -35,34 +38,39 @@ export default function WorkRecent() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent My Works</Title>
+      <Title>최근 워크 리스트</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Work name</TableCell>
-            <TableCell>Group master</TableCell>
-            <TableCell>Team</TableCell>
-            <TableCell>Group member</TableCell>
-            <TableCell align="center">Auth</TableCell>
-            <TableCell align="center">Function</TableCell>
+            <TableCell>id</TableCell>
+            <TableCell>워크명</TableCell>
+            <TableCell>그룹명</TableCell>
+            <TableCell align="center">그룹원 수</TableCell>
+            <TableCell align="center">그룹장</TableCell>
+            <TableCell align="center">팀명</TableCell>
+            <TableCell align="center">생성일</TableCell>
+            <TableCell align="center">마감기한</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="center">{row.amount}</TableCell>
-              <TableCell align="center">{row.func}</TableCell>
+              
+              <TableCell>{row.id}</TableCell>
+              <TableCell><Link to={routes.work}>{row.work_name}</Link></TableCell>
+              <TableCell >{row.group_name}</TableCell>
+              <TableCell align="center">{row.group_number}</TableCell>
+              <TableCell align="center">{row.group_leader}</TableCell>
+              <TableCell align="center">{row.team}</TableCell>
+              <TableCell align="center">{row.created_date}</TableCell>
+              <TableCell align="center">{row.to_date}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
         <Link to={routes.workList}>
-          More Work List
+            워크 리스트 전체보기
         </Link>
       </div>
     </React.Fragment>
