@@ -42,7 +42,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="그룹 라스트" />
+      <ListItemText primary="그룹 리스트" />
     </ListItem>
     </Link>
 

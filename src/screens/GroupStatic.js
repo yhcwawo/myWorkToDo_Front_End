@@ -24,10 +24,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import axios from 'axios';
 
-//box 가로 크기 지정
+//통계 쿼리 파트
+//drawer 가로 크기 지정
 const drawerWidth = 240;
 const TAX_RATE = 0.07;
+//전체 그룹원 테스크량 통계를 보여주기
+//전체 그룹원 대비 본인의 테스크량 비율 보여주기
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -133,6 +137,8 @@ const rows = [
   createRow('Paper (Case)', 10, 45.99),
   createRow('Waste Basket', 2, 17.99),
 ];
+
+// today 기준으로 전후 4일에 대한 통계쿼리 출력
 
 const invoiceSubtotal = subtotal(rows);
 const invoiceTaxes = TAX_RATE * invoiceSubtotal;

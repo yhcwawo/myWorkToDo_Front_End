@@ -13,7 +13,7 @@ import NotFound from "./screens/NotFound";
 
 function App() {
 
-    const isLoggedIn = false;
+    const isLoggedIn = true;
 
   return (
     

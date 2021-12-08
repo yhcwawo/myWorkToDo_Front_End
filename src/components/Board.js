@@ -5,7 +5,7 @@ import DndCard from "./DndCard";
 
 const Wrapper = styled.div`
   width: 300px;
-  background-color: #e4f2ff;
+  background-color: #fff44f;
   border-radius: 5px;
   padding-top: 10px;
   min-height: 300px;
@@ -24,7 +24,7 @@ const Title = styled.h2`
 const Area = styled.div`
   background-color: ${(props) =>
     props.isDraggingOver
-    ? "#dfe6e9"
+    ? "#fff44f"
     : props.isDraggingFromThis
     ? "#b2bec3"
     : "transparent"};

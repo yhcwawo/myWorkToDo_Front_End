@@ -11,7 +11,7 @@ const Card = styled.div`
   padding: 10px 10px;
   padding: 10px;
   background-color: ${(props) =>
-    props.isDragging ? "#e4f2ff" : lightGreen};
+    props.isDragging ? "#e4f2ff" : "#fff44f"};
   box-shadow: ${(props) =>
     props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
 `;
