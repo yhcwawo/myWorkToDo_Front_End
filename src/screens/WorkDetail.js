@@ -138,7 +138,7 @@ export default function WorkDetail() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   //recoilstate는 array를 return 함
   const onDragEnd = (info) => {
-    const { destination, draggableId, source } = info;
+    const { destination, source } = info;
     if (!destination) return;
     //목표 object 없으면 그냥 return
     if (destination?.droppableId === source.droppableId) {
@@ -146,9 +146,10 @@ export default function WorkDetail() {
       //toDoState 데이터가 들어옴
       setToDos((allBoards) => {
         const boardCopy = [...allBoards[source.droppableId]];
+        const taskObj = boardCopy[source.index];
         boardCopy.splice(source.index, 1);
         //옮긴 테스크 삭제
-        boardCopy.splice(destination?.index, 0, draggableId);
+        boardCopy.splice(destination?.index, 0, taskObj);
         //옮기고 복구
         return {
           ...allBoards,
@@ -162,9 +163,12 @@ export default function WorkDetail() {
       
       setToDos((allBoards) => {
         const sourceBoard = [...allBoards[source.droppableId]];
+        const taskObj = sourceBoard[source.index];
         const destinationBoard = [...allBoards[destination.droppableId]];
+        
         sourceBoard.splice(source.index, 1);
-        destinationBoard.splice(destination?.index, 0, draggableId);
+        
+        destinationBoard.splice(destination?.index, 0, taskObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoard,
@@ -172,7 +176,6 @@ export default function WorkDetail() {
         };
       });
     }
-
 
   };
 

@@ -1,4 +1,3 @@
-import { lightGreen } from "@material-ui/core/colors";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
@@ -16,10 +15,10 @@ const Card = styled.div`
     props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
-function DndCard({ toDo, index }) {
+function DndCard({ toDoId, toDoText, index }) {
 
   return (
-    <Draggable draggableId={toDo} index={index}>
+    <Draggable draggableId={toDoId.toString()} index={index}>
       {(swipe,snapshot) => (
         <Card
           isDragging={snapshot.isDragging}
@@ -27,7 +26,7 @@ function DndCard({ toDo, index }) {
           {...swipe.dragHandleProps}
           {...swipe.draggableProps}
         >
-          {toDo}
+         {toDoText}
         </Card>
       )}
     </Draggable>
