@@ -27,6 +27,7 @@ import { Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import routes from '../routes';
+import { useForm } from "react-hook-form";
 
 //가로 크기 지정
 const drawerWidth = 240;
@@ -132,8 +133,18 @@ export default function WorkRegist() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  //insert main dashboard part
 
-  //insert main dashboard
+  //register db part
+  const { register, setValue, handleSubmit } = useForm();
+  const onValid = ({ toDo }) => {
+    const newWork = {
+      id: Date.now(),
+      text: toDo,
+    }
+  };
+
+
   return (
     <div className={classes.root}>
       <CssBaseline />

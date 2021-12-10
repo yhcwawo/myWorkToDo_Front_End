@@ -54,7 +54,7 @@ const Form = styled.form`
 `;
 
 function Board({ toDos, boardId }) {
-  console.log(toDos);
+  //console.log(toDos);
 
   const setToDos = useSetRecoilState(toDoState);
   //useForm 으로 register에 등록된 변수를 담기

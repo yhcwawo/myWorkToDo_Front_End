@@ -29,7 +29,7 @@ import axios from 'axios';
 //통계 쿼리 파트
 //drawer 가로 크기 지정
 const drawerWidth = 240;
-const TAX_RATE = 0.07;
+
 //전체 그룹원 테스크량 통계를 보여주기
 //전체 그룹원 대비 본인의 테스크량 비율 보여주기
 
@@ -115,34 +115,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//소수점 정리
 function ccyFormat(num) {
   return `${num.toFixed(2)}`;
 }
 
-function priceRow(qty, unit) {
-  return qty * unit;
+//row setting
+function createRow(name, daypre4, daypre3, daypre2,daypre1,daytoday,daypost1,daypost2,daypost3,daypost4) {
+
+  return { name, daypre4, daypre3, daypre2,daypre1,daytoday,daypost1,daypost2,daypost3,daypost4 };
 }
 
-function createRow(desc, qty, unit) {
-  const price = priceRow(qty, unit);
-  return { desc, qty, unit, price };
-}
-
+//add up
 function subtotal(items) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
+  return items.map(({ daytoday }) => daytoday).reduce((i) => i, 0);
 }
 
 const rows = [
-  createRow('Paperclips (Box)', 100, 1.15),
-  createRow('Paper (Case)', 10, 45.99),
-  createRow('Waste Basket', 2, 17.99),
+  createRow('윤홍찬', 4, 3 ,4, 3 ,4, 7 , 3 ,4, 3 ,5),
+  createRow('나은찬', 4, 3 ,4, 3 ,4, 7 , 3 ,4, 3 ,5),
+  createRow('강민주', 4, 3 ,4, 3 ,4, 7 , 3 ,4, 3 ,5),
 ];
 
 // today 기준으로 전후 4일에 대한 통계쿼리 출력
 
+// total 통계정보는 전체 테스크 대비 로그인한 사용자의 테스트 비율을 보여줄 예정  - rest api /static getGroupStaticInfo 쓰기
+//axios.get
+//+ 좀 더 고민해보기
 const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+const invoiceTotal = invoiceSubtotal + invoiceSubtotal;
 
 export default function GroupStatic() {
   const classes = useStyles();
@@ -219,41 +220,50 @@ export default function GroupStatic() {
             <Table className={classes.table} aria-label="spanning table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" colSpan={3}>
+                  <TableCell align="left" colSpan={10}>
                     주간 워크 그룹 통계
                   </TableCell>
-                  <TableCell align="right">(내가 소속된 워크 그룹)</TableCell>
+                
                 </TableRow>
                 <TableRow>
-                  <TableCell>Desc</TableCell>
-                  <TableCell align="right">Qty.</TableCell>
-                  <TableCell align="right">Unit</TableCell>
-                  <TableCell align="right">Sum</TableCell>
+                  <TableCell>워크 멤버</TableCell>
+                  <TableCell align="right">-4days</TableCell>
+                  <TableCell align="right">-3days</TableCell>
+                  <TableCell align="right">-2days</TableCell>
+                  <TableCell align="right">-1day</TableCell>
+                  <TableCell align="right">today</TableCell>
+                  <TableCell align="right">+1day</TableCell>
+                  <TableCell align="right">+2days</TableCell>
+                  <TableCell align="right">+3days</TableCell>
+                  <TableCell align="right">+4days</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
-                  <TableRow key={row.desc}>
-                    <TableCell>{row.desc}</TableCell>
-                    <TableCell align="right">{row.qty}</TableCell>
-                    <TableCell align="right">{row.unit}</TableCell>
-                    <TableCell align="right">{ccyFormat(row.price)}</TableCell>
+                  <TableRow key={row.name}>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell align="right">{row.daypre4}</TableCell>
+                    <TableCell align="right">{row.daypre3}</TableCell>
+                    <TableCell align="right">{row.daypre2}</TableCell>
+                    <TableCell align="right">{row.daypre1}</TableCell>
+                    <TableCell align="right">{row.daytoday}</TableCell>
+                    <TableCell align="right">{row.daypost1}</TableCell>
+                    <TableCell align="right">{row.daypost2}</TableCell>
+                    <TableCell align="right">{row.daypost3}</TableCell>
+                    <TableCell align="right">{row.daypost4}</TableCell>
+             
                   </TableRow>
                 ))}
 
                 <TableRow>
-                  <TableCell rowSpan={3} />
-                  <TableCell colSpan={2}>Subtotal</TableCell>
-                  <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+                  <TableCell rowSpan={2} />
+                  <TableCell colSpan={8}>전체 대비 나의 테스크 가동률</TableCell>
+                  <TableCell align="right">{ccyFormat(12)+"%"}</TableCell>
                 </TableRow>
+
                 <TableRow>
-                  <TableCell>Tax</TableCell>
-                  <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-                  <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={2}>Total</TableCell>
-                  <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+                  <TableCell colSpan={8}>전체 테스크 가동률</TableCell>
+                  <TableCell align="right">{ccyFormat(invoiceTotal)+"%"}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
