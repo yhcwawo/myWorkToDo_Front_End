@@ -17,17 +17,14 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
-
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { Link } from 'react-router-dom';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Link, useHistory } from 'react-router-dom';
 import routes from '../routes';
 import { useForm } from "react-hook-form";
+import Input from "../components/Input";
+import axios from "axios";
+import { SERVER_URL } from "../config";
 
 //가로 크기 지정
 const drawerWidth = 240;
@@ -136,13 +133,46 @@ export default function WorkRegist() {
   //insert main dashboard part
 
   //register db part
-  const { register, setValue, handleSubmit } = useForm();
-  const onValid = ({ toDo }) => {
-    const newWork = {
-      id: Date.now(),
-      text: toDo,
-    }
+  const history = useHistory();
+
+  //ajax form event
+  let params = new URLSearchParams();
+  const { register, handleSubmit, getValues } = useForm();
+
+  const onSubmit = data => {
+      let { name, group_name, user_id, auth,group_number, group_master, team_name, to_date} = getValues();
+
+
+      user_id = 20; //test
+      auth = '0';
+      group_number = 1;
+      group_master = "본인";
+
+      params.append('name', name);
+      params.append('group_name', group_name);
+      params.append('user_id', user_id);
+      params.append('auth', auth);
+      params.append('group_number', group_number);
+      params.append('group_master', group_master);
+      params.append('team_name', team_name);
+      params.append('to_date', to_date);
+
+      const headers = {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': '*/*'
+      }
+
+      axios.post(`${SERVER_URL}/work/post`, params, {headers}).then(function (response) {
+          console.log(response);
+          history.push(routes.workList);
+
+      }).catch(function (error) {
+          // 오류발생시 실행
+      }).then(function() {
+          // 항상 실행
+      });
   };
+  //end
 
 
   return (
@@ -214,62 +244,29 @@ export default function WorkRegist() {
                   <Typography component="h1" variant="h5">
                     워크 등록
                   </Typography>
-                  <form className={classes.form} noValidate>
+                  <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
 
                       <Grid item xs={12}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="name"
-                          label="이름"
-                          name="name"
-                          autoComplete="lname"
+                        <Input
+                          type="name" placeholder="워크명 *" {...register("name",{required: true})}
                         />
+
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="email"
-                          label="Email 주소"
-                          name="email"
-                          autoComplete="email"
-                        />
+                        <Input
+                            type="name" placeholder="워크 그룹명 *" {...register("group_name",{required: true})}
+                          />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="email"
-                          label="Email 주소"
-                          name="email"
-                          autoComplete="email"
-                        />
+                        <Input
+                            type="name" placeholder="팀명 *" {...register("team_name",{required: true})}
+                          />
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
-                          id="team"
-                          label="팀 이름"
-                          name="team"
-                          autoComplete="team"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
-                          name="password"
-                          label="Password"
-                          id="password"
-                        />
+                        <Input
+                            type="date" placeholder="마감기한 *" {...register("to_date",{required: true})}
+                          />
                       </Grid>
      
                     </Grid>
@@ -282,6 +279,7 @@ export default function WorkRegist() {
                     >
                       등록하기
                     </Button>
+                    </form>
                     <Grid container justifyContent="flex-end">
                       <Grid item>
                         <Link to={routes.workList} style={{ textDecoration: 'none' }}>
@@ -289,7 +287,7 @@ export default function WorkRegist() {
                         </Link>
                       </Grid>
                     </Grid>
-                  </form>
+                  
                 </div>
 
               </Container>

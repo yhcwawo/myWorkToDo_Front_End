@@ -22,6 +22,7 @@ import WorkRecent from '../components/WorkRecent';
 import Title from '../components/Title';
 import API from '../components/axios';
 import axios from 'axios';
+import { SERVER_URL } from '../config';
 
 //box 가로 크기 지정
 const drawerWidth = 240;
@@ -116,11 +117,14 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-
-  axios.get("http://localhost:8080/user/all")
+  //when start page
+  const user_id = 1;
+  axios.get(SERVER_URL+`/work/recent/${user_id}`)
   .then(function (response) {
        // response  
+       console.log("recent my work list");
        console.log(response);
+
   }).catch(function (error) {
       // 오류발생시 실행
   }).then(function() {

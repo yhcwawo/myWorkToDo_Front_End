@@ -2,27 +2,17 @@ import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import routes from '../routes';
-
-function subExplain() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'My work to do에서 그룹 업무를 관리해보세요. '}
- 
-      {new Date().getFullDate()}
-
-    </Typography>
-  );
-}
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import { SERVER_URL } from '../config';
+import Input from '../components/Input';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,6 +36,58 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const history = useHistory();
+  const location = useLocation();
+
+    //ajax form event
+    const { register, handleSubmit, getValues } = useForm({
+      mode: "onChange",
+      defaultValues: {
+        name: location?.state?.name || "",
+        password: location?.state?.password || "",
+      },
+    })
+  
+    const onSubmit = data => {
+        const { name, password } = getValues();
+
+        const headers = {
+          'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': '*/*'
+        }
+
+
+        //rest api
+        axios({
+          method: 'get',
+          url: `${SERVER_URL}/login/verify`,
+          headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+          },
+          params: {
+            name: name,
+            password: password,
+          }
+        })
+          .then((response) => {
+              console.log(response);
+              history.push(routes.main);
+          })
+          .catch((error) => {
+              console.log(error);
+               // 오류발생시 실행
+          }
+       );
+
+
+    };
+    //end
+
+    const clearLoginError = () => {
+      
+    };
+
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,31 +99,15 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           로그인
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="이름"
-            name="name"
-            autoComplete="name"
-            autoFocus
-          />
+              <Input
+                type="text" onChange={clearLoginError} placeholder="이름을 입력해주세요" {...register("name",{required: true})}
+              />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+              <Input
+                type="password"onChange={clearLoginError} placeholder="비밀번호를 입력해주세요" {...register("password",{required: true})}
+              />
 
           <Button
             type="submit"
@@ -92,6 +118,9 @@ export default function SignIn() {
           >
             로그인
           </Button>
+          </form>
+
+          
           <Grid container>
             <Grid item xs>
             </Grid>
@@ -105,12 +134,8 @@ export default function SignIn() {
             </Grid>
            
           </Grid>
-        </form>
+        
       </div>
-
-      <Box mt={8}>
-        <subExplain />
-      </Box>
       
     </Container>
   );

@@ -16,6 +16,7 @@ export const toDoState = atom({
   default: taskData ? JSON.parse(taskData) : {
       "해야 할일": [],
       "처리중": [],
+      "보류": [],
       "완료": [],
   },
 });
