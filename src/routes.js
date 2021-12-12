@@ -2,7 +2,7 @@ const routes = {
     main: "/",
     workList: "/workList",
     workRegist: "/workRegist",
-    work: "/work/:id",
+    work: "/work/:work_id",
     groupList: "/groupList",
     groupStatic: "/groupStatic",
     signIn: "/signIn",

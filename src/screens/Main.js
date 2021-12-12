@@ -118,18 +118,25 @@ export default function Dashboard() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   //when start page
-  const user_id = 1;
-  axios.get(SERVER_URL+`/work/recent/${user_id}`)
+  //replace loginvar
+  const user_id = 20;
+
+  axios.get(SERVER_URL+`/work/recent/${user_id}`, {
+    params: {
+      user_id: 20,
+    }
+  })
   .then(function (response) {
        // response  
-       console.log("recent my work list");
-       console.log(response);
-
+       console.log("work recent");
+       console.log(response.data);
   }).catch(function (error) {
       // 오류발생시 실행
   }).then(function() {
       // 항상 실행
   });
+
+ 
 
 
   //main dashboard 랜더링

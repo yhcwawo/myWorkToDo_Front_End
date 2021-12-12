@@ -137,6 +137,7 @@ export default function WorkRegist() {
 
   //ajax form event
   let params = new URLSearchParams();
+  let paramsGroup = new URLSearchParams();
   const { register, handleSubmit, getValues } = useForm();
 
   const onSubmit = data => {
@@ -164,6 +165,28 @@ export default function WorkRegist() {
 
       axios.post(`${SERVER_URL}/work/post`, params, {headers}).then(function (response) {
           console.log(response);
+
+          let group_work_id = 6;
+          paramsGroup.append('group_name', group_name);
+          paramsGroup.append('auth', auth);
+          paramsGroup.append('group_master', user_id);
+          paramsGroup.append('group_member', user_id);
+          paramsGroup.append('group_work_id', group_work_id);
+
+
+          //워크 생성하면 워크그룹 -> 그룹 마스터 넣기
+          axios.post(`${SERVER_URL}/group/post/master`, paramsGroup, {headers}).then(function (response) {
+            console.log("success")
+  
+          }).catch(function (error) {
+              // 오류발생시 실행
+          }).then(function() {
+              // 항상 실행
+          });
+
+
+
+
           history.push(routes.workList);
 
       }).catch(function (error) {

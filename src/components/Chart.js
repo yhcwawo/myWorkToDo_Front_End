@@ -9,15 +9,15 @@ function createData(time, amount) {
 }
 
 const data = [
-  createData('-4days', 0),
-  createData('-3days', 300),
-  createData('-2days', 600),
-  createData('-1day', 800),
-  createData('today', 1500),
-  createData('+1day', 2000),
-  createData('+2day', 2400),
-  createData('+3day', 2400),
-  createData('+4day', 0),
+  createData('d-4', 0),
+  createData('d-3', 3),
+  createData('d-2', 2),
+  createData('d-1', 9),
+  createData('today', 11),
+  createData('d+1', 10),
+  createData('d+2', 28),
+  createData('d+3', 11),
+  createData('d+4', 0),
 ];
 
 export default function Chart() {
@@ -43,7 +43,7 @@ export default function Chart() {
               position="left"
               style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
             >
-              My Tasks
+              테스크량
             </Label>
           </YAxis>
           <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />

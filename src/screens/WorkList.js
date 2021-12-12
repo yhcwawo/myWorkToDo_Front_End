@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,7 +13,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
@@ -22,17 +21,23 @@ import { Link } from "react-router-dom";
 import routes from "../routes";
 import { Button } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
+import useUser from "../hooks/useUser";
+import { SERVER_URL } from "../config";
+import axios from "axios";
 
 //data grid for work
 // id == essential value
+//work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
+
+
 const columns = [
   { field: 'id', 
-  headerName: 'ID', 
-  width: 120,
+  headerName: 'id', 
+  width: 90,
   editable: false,
   },
   {
-    field: 'work_name',
+    field: 'name',
     headerName: '워크 이름',
     width: 150,
     editable: false,
@@ -46,21 +51,21 @@ const columns = [
     editable: false,
   },
   {
-    field: 'user_name',
+    field: 'group_master',
     headerName: '그룹장',
     width: 120,
     editable: false,
   },
   {
-    field: 'team',
+    field: 'team_name',
     headerName: '팀명',
-    width: 150,
+    width: 110,
     editable: false,
   },
   {
     field: 'group_number',
     headerName: '그룹원 수',
-    width: 150,
+    width: 140,
     editable: false,
   },
   {
@@ -77,17 +82,6 @@ const columns = [
   },
 ];
 
-const rows = [
-  { id: 1, work_name: 'Snow' ,group_name: 'Jon', user_name: 'Jon', team: 'Jon', group_number: 35, created_date: '2021-11-30',to_date: '2021-12-17' },
-  { id: 2, work_name: 'Lannister', group_name: 'Cersei', user_name: 'Jon',team: 'Jon',  group_number: 42, created_date: '2021-11-30',to_date: '2021-12-17' },
-  { id: 3, work_name: 'Lannister', group_name: 'Jaime', user_name: 'Jon',team: 'Jon',  group_number: 45 , created_date: '2021-11-30',to_date: '2021-12-17'},
-  { id: 4, work_name: 'Stark', group_name: 'Arya', user_name: 'Jon', team: 'Jon', group_number: 16, created_date: '2021-11-30' ,to_date: '2021-12-17'},
-  { id: 5, work_name: 'Targaryen', group_name: 'Daenerys', user_name: 'Jon', team: 'Jon', group_number: null, created_date: '2021-11-30' ,to_date: '2021-12-17'},
-  { id: 6, work_name: 'Melisandre', group_name: null, user_name: 'Jon', team: 'Jon', group_number: 150, created_date: '2021-11-30' ,to_date: '2021-12-17'},
-  { id: 7, work_name: 'Clifford', group_name: 'Ferrara', user_name: 'Jon', team: 'Jon', group_number: 44, created_date: '2021-11-30' ,to_date: '2021-12-17'},
-  { id: 8, work_name: 'Frances', group_name: 'Rossini', user_name: 'Jon', team: 'Jon', group_number: 36 , created_date: '2021-11-30',to_date: '2021-12-17'},
-  { id: 9, work_name: 'Roxie', group_name: 'Harvey', user_name: 'Jon', team: 'Jon', group_number: 65, created_date: '2021-11-30' ,to_date: '2021-12-17'},
-];
 
 //가로 크기 지정
 const drawerWidth = 240;
@@ -184,6 +178,36 @@ export default function WorkList() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const [rowData,setRowData] = useState([]);
+  // data part
+  console.log(useUser());
+
+  // console.log(data);
+  const user_id = 20;
+
+  //didmount
+  useEffect(()=>{
+
+    axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+    .then(function (response) {
+         // response  
+         console.log("work list");
+         console.log(response.data);
+         setRowData(response.data);
+         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
+         // rows rendering
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+  },[]);
 
   //insert main dashboard
   return (
@@ -260,7 +284,7 @@ export default function WorkList() {
 
               <div style={{ height: 400, width: '100%' }}>
               <DataGrid
-                rows={rows}
+                rows={rowData}
                 columns={columns}
                 pageSize={5}
                 checkboxSelection

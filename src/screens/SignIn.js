@@ -34,12 +34,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn( ) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
 
     //ajax form event
+
     const { register, handleSubmit, getValues } = useForm({
       mode: "onChange",
       defaultValues: {
@@ -52,42 +53,53 @@ export default function SignIn() {
         const { name, password } = getValues();
 
         const headers = {
-          'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Content-type': 'application/json; charset=UTF-8',
           'Accept': '*/*'
         }
 
-
         //rest api
-        axios({
-          method: 'get',
-          url: `${SERVER_URL}/login/verify`,
-          headers: {
-              'Content-type': 'application/json; charset=UTF-8',
-          },
+
+        const user_id = 20;
+
+        axios.get(`${SERVER_URL}/user/login`, {
           params: {
-            name: name,
-            password: password,
+            name: name.toString(),
+            password: password.toString(),
           }
         })
-          .then((response) => {
-              console.log(response);
-              history.push(routes.main);
-          })
-          .catch((error) => {
-              console.log(error);
-               // 오류발생시 실행
+        .then(function (response) {
+             // response  
+             console.log("work list");
+             console.log(response);
+             history.push(routes.main);
+        }).catch(function (error) {
+            // 오류발생시 실행
+        }).then(function() {
+            // 항상 실행
+        });
+
+        axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
+          params: {
+            user_id: user_id,
           }
-       );
+        })
+        .then(function (response) {
+             // response  
+             console.log("work list");
+             console.log(response.data);
+        }).catch(function (error) {
+            // 오류발생시 실행
+        }).then(function() {
+            // 항상 실행
+        });
+      
 
 
     };
     //end
 
     const clearLoginError = () => {
-      
     };
-
-
 
   return (
     <Container component="main" maxWidth="xs">

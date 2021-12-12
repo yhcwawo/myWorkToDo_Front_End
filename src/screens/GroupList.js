@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -31,6 +31,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import axios from "axios";
+import { SERVER_URL } from "../config";
 
 
 const useRowStyles = makeStyles({
@@ -66,20 +68,24 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+        {/* here */}
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+
+{/* work_id as id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date */}
+
+        <TableCell align="right">{row.group_name}</TableCell>
+        <TableCell align="right">{row.group_number}</TableCell>
+        <TableCell align="right">{row.created_date}</TableCell>
+        <TableCell align="right">{row.to_date}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                {row.group_name}
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
@@ -91,7 +97,9 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
+
+                  {/* group part */}
+                  {/* {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
                         {historyRow.date}
@@ -99,10 +107,12 @@ function Row(props) {
                       <TableCell>{historyRow.customerId}</TableCell>
                       <TableCell align="right">{historyRow.amount}</TableCell>
                       <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
+                        {historyRow.amount}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))} */}
+
+
                 </TableBody>
               </Table>
             </Box>
@@ -112,23 +122,7 @@ function Row(props) {
     </React.Fragment>
   );
 }
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
+
 //가로 크기 지정
 const drawerWidth = 240;
 
@@ -240,13 +234,37 @@ export default function GroupList() {
   
   //query 2개를 동시 호출하여 해결
   
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-    createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-    createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-  ];
+
+  const [rowData,setRowData] = useState([]);
+
+  // data part
+  // const { data } = useUser();
+  // console.log(data);
+  const user_id = 20;
+
+ //didmount
+ useEffect(()=>{
+
+    axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+    .then(function (response) {
+        // response  
+        console.log("work data");
+        console.log(response.data);
+        setRowData(response.data);
+
+        //group_id, group_name, auth, group_master, group_member, group_work_id
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+  },[]);
 
   //insert main dashboard
   return (
@@ -322,8 +340,8 @@ export default function GroupList() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                       <Row key={row.name} row={row} />
+                    {rowData.map((row) => (
+                       <Row key={row.id} row={row} />
                      ))}
                   </TableBody>
                 </Table>

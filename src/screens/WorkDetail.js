@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import clsx from 'clsx';
@@ -20,6 +20,10 @@ import { mainListItems } from '../components/listItems';
 import { useRecoilState } from "recoil";
 import { toDoState } from "../components/atom";
 import Board from "../components/Board";
+import TrashBin from "../components/TrashBin";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { SERVER_URL } from "../config";
+import axios from "axios";
 
 
 //box width size
@@ -124,7 +128,7 @@ const Boards = styled.div`
 `;
 
 
-export default function WorkDetail() {
+export default function WorkDetail({ location }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -134,6 +138,32 @@ export default function WorkDetail() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const {work_id} = useParams();
+
+  //didmount
+  useEffect(()=>{
+
+    axios.get(`${SERVER_URL}/task/${work_id}`, {
+      params: {
+        work_id: work_id,
+      }
+    })
+    .then(function (response) {
+         // response  
+         console.log("task list");
+         console.log(response.data);
+
+         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
+         // rows rendering
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+  },[]);
+
 
   const [toDos, setToDos] = useRecoilState(toDoState);
   //recoilstate는 array를 return 함
@@ -247,6 +277,7 @@ export default function WorkDetail() {
                     <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
                   ))}
                 </Boards>
+
               </Wrapper>
 
               </DragDropContext>
