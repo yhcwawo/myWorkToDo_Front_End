@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,6 +25,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios';
+import { SERVER_URL } from '../config';
 
 //통계 쿼리 파트
 //drawer 가로 크기 지정
@@ -156,6 +157,39 @@ export default function GroupStatic() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const [rowData,setRowData] = useState([]);
+  // data part
+  //const {data} = useUser();
+
+
+  // console.log(data);
+  const user_id = 20;
+
+  //didmount
+  useEffect(()=>{
+
+    axios.get(`${SERVER_URL}/static/group/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+    .then(function (response) {
+         // response  
+         console.log("static list");
+         console.log(response.data);
+         //setRowData(response.data);
+         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
+         // rows rendering
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+  },[]);
+  //axios part
+
   //main dashboard 랜더링
   //main은 컨테이너만 잡고 컴포넌트 호출로 2단 구성 할 예정
   return (
@@ -227,15 +261,15 @@ export default function GroupStatic() {
                 </TableRow>
                 <TableRow>
                   <TableCell>워크 멤버</TableCell>
-                  <TableCell align="right">-4days</TableCell>
-                  <TableCell align="right">-3days</TableCell>
-                  <TableCell align="right">-2days</TableCell>
-                  <TableCell align="right">-1day</TableCell>
+                  <TableCell align="right">d-4</TableCell>
+                  <TableCell align="right">d-3</TableCell>
+                  <TableCell align="right">d-2</TableCell>
+                  <TableCell align="right">d-1</TableCell>
                   <TableCell align="right">today</TableCell>
-                  <TableCell align="right">+1day</TableCell>
-                  <TableCell align="right">+2days</TableCell>
-                  <TableCell align="right">+3days</TableCell>
-                  <TableCell align="right">+4days</TableCell>
+                  <TableCell align="right">d+1</TableCell>
+                  <TableCell align="right">d+2</TableCell>
+                  <TableCell align="right">d+3</TableCell>
+                  <TableCell align="right">d+4</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

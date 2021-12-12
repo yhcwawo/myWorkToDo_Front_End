@@ -67,6 +67,38 @@ function Board({ toDos, boardId }) {
     setToDos((allBoards) => {
       // save to mysql db
       //axios 
+      //ajax form event
+  // let params = new URLSearchParams();
+  // const { register, handleSubmit, getValues } = useForm();
+
+  // const onSubmit = data => {
+  //     const { name, password, email, team } = getValues();
+
+  //     params.append('name', name);
+  //     params.append('password', password);
+  //     params.append('email', email);
+  //     params.append('team', team);
+
+  //     const headers = {
+  //       'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+  //       'Accept': '*/*'
+  //     }
+
+  //     axios.post(`${SERVER_URL}/user/post`, params, {headers}).then(function (response) {
+  //         console.log(response);
+  //         history.push(routes.signIn, {
+  //           message: "Account created. Please log in.",
+  //           name,
+  //           password,
+  //         });
+
+  //     }).catch(function (error) {
+  //         // 오류발생시 실행
+  //     }).then(function() {
+  //         // 항상 실행
+  //     });
+  // };
+  //end
 
       /* "todos",
         JSON.stringify({

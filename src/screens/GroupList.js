@@ -42,20 +42,8 @@ const useRowStyles = makeStyles({
     },
   },
 });
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: '2020-01-05', customerId: '11091700', amount: 3 },
-      { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-    ],
-  };
-}
+
+
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -90,24 +78,28 @@ function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>ID</TableCell>
+                    <TableCell>그룹장</TableCell>
+                    <TableCell>멤버이름</TableCell>
+                    <TableCell>권한</TableCell>
+                    <TableCell>삭제</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
 
                   {/* group part */}
-                  {/* {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                  {/* {row.groupRow.map((groupRow) => (
+                    <TableRow key={groupRow.group_id}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {groupRow.group_id}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
+                      <TableCell>{groupRow.group_master}</TableCell>
+                      <TableCell align="right">{groupRow.group_member}</TableCell>
                       <TableCell align="right">
-                        {historyRow.amount}
+                        {groupRow.auth}
+                      </TableCell>
+                      <TableCell align="right">
+                        {groupRow.auth}
                       </TableCell>
                     </TableRow>
                   ))} */}
@@ -205,6 +197,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function GroupList() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -216,26 +209,22 @@ export default function GroupList() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  //grid
   function createData(name, calories, fat, carbs, protein, price) {
     return {
       name,
-      calories,
-      fat,
-      carbs,
-      protein,
       price,
       history: [
         { date: '2020-01-05', customerId: '11091700', amount: 3 },
         { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
       ],
-    };
-  }
-  
+    }
+  };
+
+  //grid
   //query 2개를 동시 호출하여 해결
   
-
   const [rowData,setRowData] = useState([]);
+  const [groupData,setGroupData] = useState([]);
 
   // data part
   // const { data } = useUser();
@@ -250,11 +239,44 @@ export default function GroupList() {
         user_id: user_id,
       }
     })
-    .then(function (response) {
+    .then(function (work_result) {
         // response  
         console.log("work data");
-        console.log(response.data);
-        setRowData(response.data);
+        console.log(work_result.data);
+
+        const work_data = work_result.data;
+        
+        //group data
+        axios.get(`${SERVER_URL}/group/list/${user_id}`, {
+          params: {
+            group_member: user_id,
+          }
+        })
+        .then(function (group_result) {
+            // response  
+            console.log("group data");
+            console.log(group_result.data);
+            const group_data = group_result.data;
+          
+
+            setRowData(work_data);
+            setGroupData(group_result.data);
+
+            //setVehicleData(old => [...old, ...newArrayData]);
+
+            //group_id, group_name, auth, group_master, group_member, group_work_id
+    
+            //group_id, group_name, auth, group_master, group_member, group_work_id
+    
+        }).catch(function (error) {
+            // 오류발생시 실행
+        }).then(function() {
+            // 항상 실행
+        });
+
+
+        //setRowData(response.data);
+        //setVehicleData(old => [...old, ...newArrayData]);
 
         //group_id, group_name, auth, group_master, group_member, group_work_id
 

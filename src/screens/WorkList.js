@@ -180,7 +180,8 @@ export default function WorkList() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [rowData,setRowData] = useState([]);
   // data part
-  console.log(useUser());
+  const {data} = useUser();
+  console.log(useUser.data);
 
   // console.log(data);
   const user_id = 20;
