@@ -12,6 +12,7 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { user_id_token } from '../auth';
 
 // Generate WorkRecent Data
 function createData(id, work_name, group_name, group_leader,team, group_number, created_date, to_date) {
@@ -35,7 +36,7 @@ export default function WorkRecent() {
   // data part
   // const { data } = useUser();
   // console.log(data);
-  const user_id = 20;
+  const user_id = user_id_token;
 
  //didmount
  useEffect(()=>{
@@ -66,34 +67,28 @@ export default function WorkRecent() {
 
   return (
     <React.Fragment>
-      <Title>최근 워크 리스트</Title>
+      <Title>우선순위 WORK TO DO</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>id</TableCell>
-            <TableCell>워크명</TableCell>
-            <TableCell>그룹명</TableCell>
-            <TableCell align="center">그룹원 수</TableCell>
+            <TableCell >워크명</TableCell>
+            <TableCell >그룹명</TableCell>
             <TableCell align="center">그룹장</TableCell>
-            <TableCell align="center">팀명</TableCell>
             <TableCell align="center">생성일</TableCell>
-            <TableCell align="center">마감기한</TableCell>
+            <TableCell align="center">마감일</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rowData.map((row) => (
             <TableRow key={row.work_id}>
               {/* //  work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date */}
-              <TableCell>{row.work_id}</TableCell>
-              <TableCell onClick={
+              <TableCell  onClick={
                             () => {
                               history.push(`/work/${row.work_id}`);
                             }
               }>{row.name}</TableCell>
               <TableCell >{row.group_name}</TableCell>
-              <TableCell align="center">{row.group_number}</TableCell>
               <TableCell align="center">{row.group_master}</TableCell>
-              <TableCell align="center">{row.team_name}</TableCell>
               <TableCell align="center">{row.created_date}</TableCell>
               <TableCell align="center">{row.to_date}</TableCell>
             </TableRow>

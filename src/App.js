@@ -9,11 +9,12 @@ import GroupStatic from "./screens/GroupStatic";
 import SignUp from "./screens/SignUp";
 import SignIn from "./screens/SignIn";
 import NotFound from "./screens/NotFound";
-
+import { isLoggedInVar } from "./auth";
+import { TOKEN } from "./config";
 
 function App() {
-
-    const isLoggedIn = true;
+  
+    let isLoggedIn = localStorage.getItem(TOKEN);
 
   return (
     

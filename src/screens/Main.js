@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,16 +16,34 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
-
-import Chart from '../components/Chart';
+import { useHistory } from 'react-router-dom';
+import Noti from '../components/Noti';
 import WorkRecent from '../components/WorkRecent';
 import Title from '../components/Title';
 import API from '../components/axios';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
+import styled from 'styled-components';
+import ListCard from '../components/ListCard';
+import { LogUserOut, user_id_token } from '../auth';
+import { Button } from '@material-ui/core';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import useUser from '../hooks/useUser';
+import routes from '../routes';
 
 //box 가로 크기 지정
 const drawerWidth = 240;
+
+const Wrapper = styled.div`
+
+
+  display: flex;
+  overflow: hidden;
+  
+
+  
+`;
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,6 +126,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
+  const history = useHistory();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -116,27 +135,50 @@ export default function Dashboard() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const [userName,setUserName] = useState("");
 
   //when start page
   //replace loginvar
-  const user_id = 20;
+  const user_id = user_id_token;
 
-  axios.get(SERVER_URL+`/work/recent/${user_id}`, {
+  useEffect(()=>{
+
+  //login user info
+  axios.get(`${SERVER_URL}/user/${user_id}`, {
     params: {
-      user_id: 20,
+      user_id: user_id,
     }
   })
   .then(function (response) {
-       // response  
-       console.log("work recent");
-       console.log(response.data);
+      console.log(response.data);
+      setUserName(response?.data?.name);
+            
   }).catch(function (error) {
-      // 오류발생시 실행
-  }).then(function() {
-      // 항상 실행
-  });
 
- 
+  }).then(function() {
+
+  });
+  //end
+
+
+  axios.get(SERVER_URL+`/work/recent/${user_id}`, {
+    params: {
+      user_id: user_id,
+    }
+    })
+    .then(function (response) {
+      // response  
+      console.log("work recent");
+
+    }).catch(function (error) {
+      // 오류발생시 실행
+    }).then(function() {
+      // 항상 실행
+    });
+
+    }, []);
+
+  
 
 
   //main dashboard 랜더링
@@ -162,10 +204,18 @@ export default function Dashboard() {
 
           <IconButton color="inherit">
             <Badge color="secondary">
-
-            <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-              User
-            </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  startIcon={<ExitToAppIcon />}
+                  onClick={()=> {
+                    LogUserOut();
+                    history.push(routes.signIn);
+                  }}
+                >
+                  {userName} 님
+              </Button>
             </Badge>
           </IconButton>
 
@@ -206,9 +256,17 @@ export default function Dashboard() {
 
             {/* Group Task Chart */}
             <Grid item xs={12}>
+      
               <Paper className={fixedHeightPaper}>
-                <Chart />
+               
+                <Wrapper>
+                  <ListCard />
+                  <ListCard />
+                  <ListCard />
+                </Wrapper>
+                
               </Paper>
+             
             </Grid>
 
           </Grid>

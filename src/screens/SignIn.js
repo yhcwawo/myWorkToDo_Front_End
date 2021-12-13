@@ -34,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let userId = "";
+const TOKEN = "TOKEN";
+const USER = "USER";
+
+
 export default function SignIn( ) {
   const classes = useStyles();
   const history = useHistory();
@@ -51,17 +56,9 @@ export default function SignIn( ) {
   
     const onSubmit = data => {
         const { name, password } = getValues();
+        //login rest api
 
-        const headers = {
-          'Content-type': 'application/json; charset=UTF-8',
-          'Accept': '*/*'
-        }
-
-        //rest api
-
-        const user_id = 20;
-
-        axios.get(`${SERVER_URL}/user/login`, {
+        axios.get(`${SERVER_URL}/login/verify/${name}/${password}`, {
           params: {
             name: name.toString(),
             password: password.toString(),
@@ -69,31 +66,23 @@ export default function SignIn( ) {
         })
         .then(function (response) {
              // response  
-             console.log("work list");
-             console.log(response);
-             history.push(routes.main);
+             console.log("LOGIN CHECK");
+             const result = response.data.user_id;
+             if(result === undefined || result === null){
+                alert("아이디나 비밀번호를 확인해주세요.");
+             }else{
+                //login
+                localStorage.setItem(USER, result);
+                localStorage.setItem(TOKEN, true);
+                history.push(routes.main);
+             };
+
+             
         }).catch(function (error) {
             // 오류발생시 실행
         }).then(function() {
             // 항상 실행
         });
-
-        axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
-          params: {
-            user_id: user_id,
-          }
-        })
-        .then(function (response) {
-             // response  
-             console.log("work list");
-             console.log(response.data);
-        }).catch(function (error) {
-            // 오류발생시 실행
-        }).then(function() {
-            // 항상 실행
-        });
-      
-
 
     };
     //end
@@ -105,10 +94,14 @@ export default function SignIn( ) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+        <Typography component="h2" variant="h2">
+          My work to do
+        </Typography>
+
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h5" variant="h5">
           로그인
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>

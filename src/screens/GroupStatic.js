@@ -17,7 +17,6 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -26,6 +25,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
+import { user_id_token } from '../auth';
 
 //통계 쿼리 파트
 //drawer 가로 크기 지정
@@ -159,11 +159,7 @@ export default function GroupStatic() {
 
   const [rowData,setRowData] = useState([]);
   // data part
-  //const {data} = useUser();
-
-
-  // console.log(data);
-  const user_id = 20;
+  const user_id = user_id_token;
 
   //didmount
   useEffect(()=>{

@@ -24,17 +24,19 @@ import SaveIcon from '@material-ui/icons/Save';
 import useUser from "../hooks/useUser";
 import { SERVER_URL } from "../config";
 import axios from "axios";
+import { user_id_token } from "../auth";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 //data grid for work
 // id == essential value
 //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
 
-
 const columns = [
   { field: 'id', 
-  headerName: 'id', 
-  width: 90,
-  editable: false,
+    headerName: 'id', 
+    width: 90,
+    editable: false,
+   // headerAlign: 'center',
   },
   {
     field: 'name',
@@ -43,7 +45,6 @@ const columns = [
     editable: false,
    
   },
-// ${params.getValue("id")}
   {
     field: 'group_name',
     headerName: '워크 그룹',
@@ -64,8 +65,8 @@ const columns = [
   },
   {
     field: 'group_number',
-    headerName: '그룹원 수',
-    width: 140,
+    headerName: '인원',
+    width: 110,
     editable: false,
   },
   {
@@ -76,7 +77,7 @@ const columns = [
   },
   {
     field: 'to_date',
-    headerName: '마감기한',
+    headerName: '마감일',
     width: 150,
     editable: false,
   },
@@ -179,12 +180,10 @@ export default function WorkList() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [rowData,setRowData] = useState([]);
+  const history = useHistory();
   // data part
-  const {data} = useUser();
-  console.log(useUser.data);
 
-  // console.log(data);
-  const user_id = 20;
+  const user_id = user_id_token;
 
   //didmount
   useEffect(()=>{
@@ -197,7 +196,6 @@ export default function WorkList() {
     .then(function (response) {
          // response  
          console.log("work list");
-         console.log(response.data);
          setRowData(response.data);
          //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering
@@ -290,6 +288,12 @@ export default function WorkList() {
                 pageSize={5}
                 checkboxSelection
                 disableSelectionOnClick
+                onRowClick={(params, event) => {
+                  if (!event.ignore) {
+                    console.log("push -> /roles/" + params.row.id);
+                    history.push(`/work/${params.row.id}`);
+                  }
+                }}
               />
               </div>
             </Grid>

@@ -25,6 +25,7 @@ import { useForm } from "react-hook-form";
 import Input from "../components/Input";
 import axios from "axios";
 import { SERVER_URL } from "../config";
+import { user_id_token } from "../auth";
 
 //가로 크기 지정
 const drawerWidth = 240;
@@ -143,11 +144,10 @@ export default function WorkRegist() {
   const onSubmit = data => {
       let { name, group_name, user_id, auth,group_number, group_master, team_name, to_date} = getValues();
 
-
-      user_id = 20; //test
+      user_id = user_id_token; 
       auth = '0';
       group_number = 1;
-      group_master = "본인";
+      group_master = user_id_token;
 
       params.append('name', name);
       params.append('group_name', group_name);
@@ -166,7 +166,7 @@ export default function WorkRegist() {
       axios.post(`${SERVER_URL}/work/post`, params, {headers}).then(function (response) {
           console.log(response);
 
-          let group_work_id = 6;
+          let group_work_id = 6; //sequence
           paramsGroup.append('group_name', group_name);
           paramsGroup.append('auth', auth);
           paramsGroup.append('group_master', user_id);
@@ -183,9 +183,6 @@ export default function WorkRegist() {
           }).then(function() {
               // 항상 실행
           });
-
-
-
 
           history.push(routes.workList);
 

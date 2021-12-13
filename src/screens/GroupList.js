@@ -13,111 +13,125 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
-
-//linked data grid
-
-import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
-import Collapse from '@material-ui/core/Collapse';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import axios from "axios";
+import { DataGrid } from '@material-ui/data-grid';
+import { Link } from "react-router-dom";
+import routes from "../routes";
+import { Button } from "@material-ui/core";
+import SaveIcon from '@material-ui/icons/Save';
 import { SERVER_URL } from "../config";
+import axios from "axios";
+import { user_id_token } from "../auth";
 
+//data grid for work group
+// id == essential value
+// groupT.group_work_id, groupT.group_id , groupT.group_name,  groupT.auth , groupT.group_master , groupT.group_member, workT.name,\n" +
+//             "date_format(workT.created_date, '%Y-%m-%d') as created_date ,date_format(workT.to_date, '%Y-%m-%d') as to_date\n" +
 
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
+const columns = [
+  { field: 'id', 
+    headerName: 'id', 
+    width: 90,
+    editable: false,
+   // headerAlign: 'center',
   },
-});
+  {
+    field: 'name',
+    headerName: '워크명',
+    width: 150,
+    editable: false,
+   
+  },
+  {
+    field: 'group_name',
+    headerName: '워크그룹',
+    width: 140,
+    editable: false,
+  },
+  {
+    field: 'group_master_name',
+    headerName: '그룹장',
+    width: 120,
+    editable: false,
+  },
+  {
+    field: 'group_member_name',
+    headerName: '멤버명',
+    width: 120,
+    editable: false,
+  },
+  {
+    field: 'group_number',
+    headerName: '인원',
+    width: 110,
+    editable: false,
+  },
+  {
+    field: 'to_date',
+    headerName: '마감일',
+    width: 130,
+    editable: false,
+  },
+  {
+    field: 'auth',
+    headerName: '권한',
+    width: 180,
+    editable: false,
+    headerAlign: 'center',
+    align: 'left',
+    renderCell: (params) => (
+      <strong>
+        {/* {params.value} */}
+
+        {params.value == 0 ? (
+
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              style={{marginLeft: 16}}
+              onClick={() => {
+                alert("등록");
+              }}
+            >
+              등록
+            </Button>
+              
+        ) : (
+          "따까리"
+        )}
+
+        
+        {params.value == 0 ? (
+
+          <Button
+              variant="contained"
+              color="secondary"
+              size="small"
+              style={{marginLeft: 16}}
+              onClick={() => {
+              alert("zzz");
+              }}
+            >
+              삭제
+          </Button>
+
+        ) : (
+        "따까리"
+        )}
 
 
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const classes = useRowStyles();
-  return (
-    <React.Fragment>
-      <TableRow className={classes.root}>
-        <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        {/* here */}
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
 
-{/* work_id as id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date */}
+      </strong>
+    ),
+  },
+];
 
-        <TableCell align="right">{row.group_name}</TableCell>
-        <TableCell align="right">{row.group_number}</TableCell>
-        <TableCell align="right">{row.created_date}</TableCell>
-        <TableCell align="right">{row.to_date}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                {row.group_name}
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>그룹장</TableCell>
-                    <TableCell>멤버이름</TableCell>
-                    <TableCell>권한</TableCell>
-                    <TableCell>삭제</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-
-                  {/* group part */}
-                  {/* {row.groupRow.map((groupRow) => (
-                    <TableRow key={groupRow.group_id}>
-                      <TableCell component="th" scope="row">
-                        {groupRow.group_id}
-                      </TableCell>
-                      <TableCell>{groupRow.group_master}</TableCell>
-                      <TableCell align="right">{groupRow.group_member}</TableCell>
-                      <TableCell align="right">
-                        {groupRow.auth}
-                      </TableCell>
-                      <TableCell align="right">
-                        {groupRow.auth}
-                      </TableCell>
-                    </TableRow>
-                  ))} */}
-
-
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
 
 //가로 크기 지정
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -195,10 +209,12 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
-
-export default function GroupList() {
+export default function WorkList() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -208,77 +224,25 @@ export default function GroupList() {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-  function createData(name, calories, fat, carbs, protein, price) {
-    return {
-      name,
-      price,
-      history: [
-        { date: '2020-01-05', customerId: '11091700', amount: 3 },
-        { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-      ],
-    }
-  };
-
-  //grid
-  //query 2개를 동시 호출하여 해결
-  
   const [rowData,setRowData] = useState([]);
-  const [groupData,setGroupData] = useState([]);
-
   // data part
-  // const { data } = useUser();
-  // console.log(data);
-  const user_id = 20;
 
- //didmount
- useEffect(()=>{
+  const user_id = user_id_token;
 
-    axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
+  //didmount
+  useEffect(()=>{
+
+    axios.get(`${SERVER_URL}/group/list/${user_id}`, {
       params: {
-        user_id: user_id,
+        group_member: user_id,
       }
     })
-    .then(function (work_result) {
-        // response  
-        console.log("work data");
-        console.log(work_result.data);
-
-        const work_data = work_result.data;
-        
-        //group data
-        axios.get(`${SERVER_URL}/group/list/${user_id}`, {
-          params: {
-            group_member: user_id,
-          }
-        })
-        .then(function (group_result) {
-            // response  
-            console.log("group data");
-            console.log(group_result.data);
-            const group_data = group_result.data;
-          
-
-            setRowData(work_data);
-            setGroupData(group_result.data);
-
-            //setVehicleData(old => [...old, ...newArrayData]);
-
-            //group_id, group_name, auth, group_master, group_member, group_work_id
-    
-            //group_id, group_name, auth, group_master, group_member, group_work_id
-    
-        }).catch(function (error) {
-            // 오류발생시 실행
-        }).then(function() {
-            // 항상 실행
-        });
-
-
-        //setRowData(response.data);
-        //setVehicleData(old => [...old, ...newArrayData]);
-
-        //group_id, group_name, auth, group_master, group_member, group_work_id
+    .then(function (response) {
+         // response  
+         console.log("group list");
+         setRowData(response.data);
+         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
+         // rows rendering
 
     }).catch(function (error) {
         // 오류발생시 실행
@@ -305,7 +269,7 @@ export default function GroupList() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            그룹 리스트
+            <strong>워크 그룹 리스트</strong>
           </Typography>
 
           <IconButton color="inherit">
@@ -346,29 +310,20 @@ export default function GroupList() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             
-            {/* Linked data grid */}
+            {/* Work list */}
             <Grid item xs={12}>
-              
-              <TableContainer component={Paper}>
-                <Table aria-label="linked table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell />
-                      <TableCell>워크 이름</TableCell>
-                      <TableCell align="right">워크그룹</TableCell>
-                      <TableCell align="right">워크 그룹원 수</TableCell>
-                      <TableCell align="right">생성일</TableCell>
-                      <TableCell align="right">마감기한</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rowData.map((row) => (
-                       <Row key={row.id} row={row} />
-                     ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+
+              <div style={{ height: 400, width: '100%' }}>
+              <DataGrid
+                rows={rowData}
+                columns={columns}
+                pageSize={5}
+                checkboxSelection
+                disableSelectionOnClick
+              />
+              </div>
             </Grid>
+
 
           </Grid>
 
