@@ -187,6 +187,7 @@ export default function WorkList() {
 
   //didmount
   useEffect(()=>{
+   //1 call
 
     axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
       params: {
@@ -196,6 +197,7 @@ export default function WorkList() {
     .then(function (response) {
          // response  
          console.log("work list");
+         setRowData(response.data);
          setRowData(response.data);
          //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering

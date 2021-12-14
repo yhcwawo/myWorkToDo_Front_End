@@ -49,13 +49,7 @@ export default function WorkRecent() {
     .then(function (response) {
         // response  
         console.log("work recent");
-        console.log(response.data);
         setRowData(response.data);
-
-
-      //  work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
-        //id, work_name, group_name, group_leader,team, group_number, created_date, to_date
-        // rows rendering
 
     }).catch(function (error) {
         // 오류발생시 실행

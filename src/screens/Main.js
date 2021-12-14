@@ -17,7 +17,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
 import { useHistory } from 'react-router-dom';
-import Noti from '../components/Noti';
 import WorkRecent from '../components/WorkRecent';
 import Title from '../components/Title';
 import API from '../components/axios';
@@ -31,19 +30,12 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import useUser from '../hooks/useUser';
 import routes from '../routes';
 
-//box 가로 크기 지정
+//네비게션바 가로 크기 지정
 const drawerWidth = 240;
-
 const Wrapper = styled.div`
-
-
   display: flex;
   overflow: hidden;
-  
-
-  
 `;
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,14 +153,14 @@ export default function Dashboard() {
   //end
 
 
-  axios.get(SERVER_URL+`/work/recent/${user_id}`, {
+  axios.get(SERVER_URL+`/static/main/${user_id}`, {
     params: {
       user_id: user_id,
     }
     })
     .then(function (response) {
       // response  
-      console.log("work recent");
+      console.log("static summary");
 
     }).catch(function (error) {
       // 오류발생시 실행

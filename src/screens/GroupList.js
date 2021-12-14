@@ -24,110 +24,14 @@ import SaveIcon from '@material-ui/icons/Save';
 import { SERVER_URL } from "../config";
 import axios from "axios";
 import { user_id_token } from "../auth";
+import GroupRegistModal from "../components/GroupRegistModal";
 
 //data grid for work group
 // id == essential value
 // groupT.group_work_id, groupT.group_id , groupT.group_name,  groupT.auth , groupT.group_master , groupT.group_member, workT.name,\n" +
 //             "date_format(workT.created_date, '%Y-%m-%d') as created_date ,date_format(workT.to_date, '%Y-%m-%d') as to_date\n" +
 
-const columns = [
-  { field: 'id', 
-    headerName: 'id', 
-    width: 90,
-    editable: false,
-   // headerAlign: 'center',
-  },
-  {
-    field: 'name',
-    headerName: '워크명',
-    width: 150,
-    editable: false,
-   
-  },
-  {
-    field: 'group_name',
-    headerName: '워크그룹',
-    width: 140,
-    editable: false,
-  },
-  {
-    field: 'group_master_name',
-    headerName: '그룹장',
-    width: 120,
-    editable: false,
-  },
-  {
-    field: 'group_member_name',
-    headerName: '멤버명',
-    width: 120,
-    editable: false,
-  },
-  {
-    field: 'group_number',
-    headerName: '인원',
-    width: 110,
-    editable: false,
-  },
-  {
-    field: 'to_date',
-    headerName: '마감일',
-    width: 130,
-    editable: false,
-  },
-  {
-    field: 'auth',
-    headerName: '권한',
-    width: 180,
-    editable: false,
-    headerAlign: 'center',
-    align: 'left',
-    renderCell: (params) => (
-      <strong>
-        {/* {params.value} */}
 
-        {params.value == 0 ? (
-
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              style={{marginLeft: 16}}
-              onClick={() => {
-                alert("등록");
-              }}
-            >
-              등록
-            </Button>
-              
-        ) : (
-          "따까리"
-        )}
-
-        
-        {params.value == 0 ? (
-
-          <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              style={{marginLeft: 16}}
-              onClick={() => {
-              alert("zzz");
-              }}
-            >
-              삭제
-          </Button>
-
-        ) : (
-        "따까리"
-        )}
-
-
-
-      </strong>
-    ),
-  },
-];
 
 
 //가로 크기 지정
@@ -217,6 +121,130 @@ const useStyles = makeStyles((theme) => ({
 export default function WorkList() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [openRegistModal, setOpenRegistModal] = React.useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+
+  const handleClickOpenRegistModal = () => {
+    setOpenRegistModal(true);
+  };
+  
+  const handleCloseRegistModal = () => {
+    setOpenRegistModal(false);
+  };
+
+  const handleClickOpenDeleteModal = () => {
+    setOpenDeleteModal(true);
+  };
+  
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const columns = [
+    { field: 'id', 
+      headerName: 'id', 
+      width: 90,
+      editable: false,
+     // headerAlign: 'center',
+    },
+    {
+      field: 'name',
+      headerName: '워크명',
+      width: 150,
+      editable: false,
+     
+    },
+    {
+      field: 'group_name',
+      headerName: '워크그룹',
+      width: 140,
+      editable: false,
+    },
+    {
+      field: 'group_master_name',
+      headerName: '그룹장',
+      width: 120,
+      editable: false,
+    },
+    {
+      field: 'group_member_name',
+      headerName: '멤버명',
+      width: 120,
+      editable: false,
+    },
+    {
+      field: 'group_number',
+      headerName: '인원',
+      width: 110,
+      editable: false,
+    },
+    {
+      field: 'to_date',
+      headerName: '마감일',
+      width: 130,
+      editable: false,
+    },
+    {
+      field: 'auth',
+      headerName: '권한',
+      width: 180,
+      editable: false,
+      headerAlign: 'center',
+      align: 'left',
+      renderCell: (params) => (
+        <strong>
+          {/* {params.value} */}
+  
+          {params.value == 0 ? (
+  
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                style={{marginLeft: 16}}
+                onClick={() => {
+                  handleClickOpenRegistModal();
+  
+  
+                }}
+              >
+                등록
+              </Button>
+                
+          ) : (
+            ""
+          )}
+  
+          
+          {params.value == 0 ? (
+  
+            <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                style={{marginLeft: 16}}
+                onClick={() => {
+    
+                  handleClickOpenDeleteModal();
+  
+                }}
+              >
+                삭제
+            </Button>
+  
+          ) : (
+          ""
+          )}
+  
+  
+  
+        </strong>
+      ),
+    },
+  ];
+  
+  
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -241,6 +269,7 @@ export default function WorkList() {
          // response  
          console.log("group list");
          setRowData(response.data);
+         setRowData(response.data);
          //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering
 
@@ -252,6 +281,7 @@ export default function WorkList() {
 
   },[]);
 
+  
   //insert main dashboard
   return (
     <div className={classes.root}>
@@ -327,6 +357,10 @@ export default function WorkList() {
 
           </Grid>
 
+        
+          <GroupRegistModal openRegistModal={openRegistModal} />
+          {/* <GroupDel openRegistModal={openRegistModal} />
+          openDeleteModal */}
         </Container>
       </main>
     </div>
