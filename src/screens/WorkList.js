@@ -171,7 +171,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WorkList() {
   const classes = useStyles();
+  const history = useHistory();
   const [open, setOpen] = React.useState(true);
+  const [userName,setUserName] = useState("");
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -180,7 +182,6 @@ export default function WorkList() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [rowData,setRowData] = useState([]);
-  const history = useHistory();
   // data part
 
   const user_id = user_id_token;

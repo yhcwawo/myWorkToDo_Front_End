@@ -24,11 +24,13 @@ import axios from 'axios';
 import { SERVER_URL } from '../config';
 import styled from 'styled-components';
 import ListCard from '../components/ListCard';
+import useUser from '../hooks/useUser';
+
+//logout
+import routes from '../routes';
 import { LogUserOut, user_id_token } from '../auth';
 import { Button } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import useUser from '../hooks/useUser';
-import routes from '../routes';
 
 //네비게션바 가로 크기 지정
 const drawerWidth = 240;
@@ -250,14 +252,10 @@ export default function Dashboard() {
             <Grid item xs={12}>
       
               <Paper className={fixedHeightPaper}>
-               
-                <Wrapper>
-                  <ListCard />
-                  <ListCard />
-                  <ListCard />
-                </Wrapper>
+                {/* Summary Card section */}
                 
               </Paper>
+              
              
             </Grid>
 

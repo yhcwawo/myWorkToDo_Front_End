@@ -26,6 +26,7 @@ import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
 import { user_id_token } from '../auth';
+import { useHistory } from 'react-router';
 
 //통계 쿼리 파트
 //drawer 가로 크기 지정
@@ -133,9 +134,6 @@ function subtotal(items) {
 }
 
 const rows = [
-  createRow('윤홍찬', 4, 3 ,4, 3 ,4, 7 , 3 ,4, 3 ,5),
-  createRow('나은찬', 4, 3 ,4, 3 ,4, 7 , 3 ,4, 3 ,5),
-  createRow('강민주', 4, 3 ,4, 3 ,4, 7 , 3 ,4, 3 ,5),
 ];
 
 // today 기준으로 전후 4일에 대한 통계쿼리 출력
@@ -148,6 +146,8 @@ const invoiceTotal = invoiceSubtotal + invoiceSubtotal;
 
 export default function GroupStatic() {
   const classes = useStyles();
+  const history = useHistory();
+  const [userName,setUserName] = useState("");
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -173,7 +173,7 @@ export default function GroupStatic() {
          // response  
          console.log("static list");
          console.log(response.data);
-         //setRowData(response.data);
+         setRowData(response.data);
          //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering
 
@@ -269,7 +269,7 @@ export default function GroupStatic() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rowData.map((row) => (
                   <TableRow key={row.name}>
                     <TableCell>{row.name}</TableCell>
                     <TableCell align="right">{row.daypre4}</TableCell>

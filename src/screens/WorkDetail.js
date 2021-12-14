@@ -24,6 +24,8 @@ import TrashBin from "../components/TrashBin";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { SERVER_URL } from "../config";
 import axios from "axios";
+import { useHistory } from "react-router";
+import { user_id_token } from "../auth";
 
 
 //box width size
@@ -130,7 +132,10 @@ const Boards = styled.div`
 
 export default function WorkDetail({ location }) {
   const classes = useStyles();
+  const history = useHistory();
+  const user_id = user_id_token;
   const [open, setOpen] = React.useState(true);
+  const [userName,setUserName] = useState("");
   const handleDrawerOpen = () => {
     setOpen(true);
   };

@@ -124,6 +124,9 @@ const useStyles = makeStyles((theme) => ({
 export default function WorkRegist() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const history = useHistory();
+  const [userName,setUserName] = useState("");
+  const user_id = user_id_token;
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -134,8 +137,6 @@ export default function WorkRegist() {
   //insert main dashboard part
 
   //register db part
-  const history = useHistory();
-
   //ajax form event
   let params = new URLSearchParams();
   let paramsGroup = new URLSearchParams();

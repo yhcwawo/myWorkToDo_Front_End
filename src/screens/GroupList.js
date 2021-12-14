@@ -24,18 +24,30 @@ import SaveIcon from '@material-ui/icons/Save';
 import { SERVER_URL } from "../config";
 import axios from "axios";
 import { user_id_token } from "../auth";
-import GroupRegistModal from "../components/GroupRegistModal";
+import { useHistory } from 'react-router-dom';
+
+//modal part
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
+import Slide from '@material-ui/core/Slide';
 
 //data grid for work group
 // id == essential value
-// groupT.group_work_id, groupT.group_id , groupT.group_name,  groupT.auth , groupT.group_master , groupT.group_member, workT.name,\n" +
-//             "date_format(workT.created_date, '%Y-%m-%d') as created_date ,date_format(workT.to_date, '%Y-%m-%d') as to_date\n" +
 
-
-
-
-//가로 크기 지정
+//navigation bar 크기 지정
 const drawerWidth = 240;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -116,14 +128,30 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+    width: 'fit-content',
+  },
+  formControl: {
+    marginTop: theme.spacing(2),
+    minWidth: 120,
+  },
+  formControlLabel: {
+    marginTop: theme.spacing(1),
+  },
 }));
 
 export default function WorkList() {
   const classes = useStyles();
+  const history = useHistory();
+  const [userName,setUserName] = useState("");
   const [open, setOpen] = React.useState(true);
   const [openRegistModal, setOpenRegistModal] = React.useState(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 
+  const maxWidth = 'sm';
   const handleClickOpenRegistModal = () => {
     setOpenRegistModal(true);
   };
@@ -204,8 +232,6 @@ export default function WorkList() {
                 style={{marginLeft: 16}}
                 onClick={() => {
                   handleClickOpenRegistModal();
-  
-  
                 }}
               >
                 등록
@@ -215,7 +241,6 @@ export default function WorkList() {
             ""
           )}
   
-          
           {params.value == 0 ? (
   
             <Button
@@ -224,9 +249,7 @@ export default function WorkList() {
                 size="small"
                 style={{marginLeft: 16}}
                 onClick={() => {
-    
                   handleClickOpenDeleteModal();
-  
                 }}
               >
                 삭제
@@ -235,9 +258,7 @@ export default function WorkList() {
           ) : (
           ""
           )}
-  
-  
-  
+
         </strong>
       ),
     },
@@ -260,6 +281,7 @@ export default function WorkList() {
   //didmount
   useEffect(()=>{
 
+    //when system start, only 1 call function
     axios.get(`${SERVER_URL}/group/list/${user_id}`, {
       params: {
         group_member: user_id,
@@ -270,8 +292,24 @@ export default function WorkList() {
          console.log("group list");
          setRowData(response.data);
          setRowData(response.data);
-         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
-         // rows rendering
+
+         //twice call because of data grid
+         //grid rows rendering
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+    
+    //user list part 
+    axios.get(`${SERVER_URL}/user/name`)
+    .then(function (response) {
+         // response  
+         console.log("user list");
+         console.log(response.data);
+
+         //setRowData(response.data);
 
     }).catch(function (error) {
         // 오류발생시 실행
@@ -279,8 +317,9 @@ export default function WorkList() {
         // 항상 실행
     });
 
-  },[]);
+ 
 
+  },[]);
   
   //insert main dashboard
   return (
@@ -357,10 +396,85 @@ export default function WorkList() {
 
           </Grid>
 
-        
-          <GroupRegistModal openRegistModal={openRegistModal} />
-          {/* <GroupDel openRegistModal={openRegistModal} />
-          openDeleteModal */}
+  {/* regist diallog part */}
+        <div>
+          <Dialog 
+            maxWidth={maxWidth}
+            open={openRegistModal}
+            onClose={handleCloseRegistModal}
+            aria-labelledby="max-width-dialog-title"
+          >
+            <DialogTitle id="max-width-dialog-title">그룹원 등록</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                해당 워크에 등록 할 멤버를 선택해주세요.
+              </DialogContentText>
+
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="max-width">멤버</InputLabel>
+                  <Select
+                    autoFocus
+                    value={maxWidth}
+                    // onChange={handleMaxWidthChange}
+                    inputProps={{
+                      name: 'max-width',
+                      id: 'max-width',
+                    }}
+                  >
+                    <MenuItem value={false}>false</MenuItem>
+                    <MenuItem value="xs">xs</MenuItem>
+
+                  </Select>
+                </FormControl>
+
+              
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseRegistModal} color="primary">
+                등록
+              </Button>
+
+              <Button onClick={handleCloseRegistModal} color="primary">
+                취소
+              </Button>
+
+            </DialogActions>
+            
+          </Dialog>
+        </div>
+
+        {/* regist part end */}
+
+        {/* delete modal part */}
+
+        <div>
+          <Dialog
+            open={openDeleteModal}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleCloseDeleteModal}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+
+            <DialogTitle id="alert-dialog-slide-title">{"그룹원 삭제"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                정말 그룹원을 삭제하시겠습니까?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDeleteModal} color="primary">
+                삭제
+              </Button>
+              <Button onClick={handleCloseDeleteModal} color="secondary">
+                취소
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        {/* end delete modal part */}
+
         </Container>
       </main>
     </div>
