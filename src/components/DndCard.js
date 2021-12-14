@@ -26,7 +26,7 @@ const Card = styled.div`
     props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
-function DndCard({ toDoId, toDoText, index }) {
+function DndCard({ toDoId, toDoText, index, user_name }) {
 
   return (
     <Draggable draggableId={toDoId.toString()} index={index}>
@@ -40,7 +40,7 @@ function DndCard({ toDoId, toDoText, index }) {
          
          <TextField
             id="input-with-icon-textfield"
-            label={"윤홍찬"}
+            label={user_name}
             value={toDoText}
             InputProps={{
               startAdornment: (

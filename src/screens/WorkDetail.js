@@ -25,8 +25,10 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { SERVER_URL } from "../config";
 import axios from "axios";
 import { useHistory } from "react-router";
-import { user_id_token } from "../auth";
-
+import { LogUserOut, user_id_token } from "../auth";
+import { Button } from "@material-ui/core";
+import routes from "../routes";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 //box width size
 const drawerWidth = 240;
@@ -136,6 +138,12 @@ export default function WorkDetail({ location }) {
   const user_id = user_id_token;
   const [open, setOpen] = React.useState(true);
   const [userName,setUserName] = useState("");
+  let sampleJSON = {
+    "해야할일": [],
+    "처리중": [],
+    "보류": [],
+    "완료": [],
+ };
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -144,9 +152,27 @@ export default function WorkDetail({ location }) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const {work_id} = useParams();
+  const [toDos, setToDos] = useRecoilState(toDoState);
 
   //didmount
   useEffect(()=>{
+
+    //login user info
+    axios.get(`${SERVER_URL}/user/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+      .then(function (response) {
+          console.log(response.data);
+          setUserName(response?.data?.name);
+                
+      }).catch(function (error) {
+
+      }).then(function() {
+
+      });
+      //end
 
     axios.get(`${SERVER_URL}/task/${work_id}`, {
       params: {
@@ -156,7 +182,57 @@ export default function WorkDetail({ location }) {
     .then(function (response) {
          // response  
          console.log("task list");
-         console.log(response.data);
+         const editDatas = response.data;
+         console.log(editDatas);
+
+         editDatas.map((editData) => {
+
+            if(editData.step === "해야할일"){
+
+                var aJson = new Object();
+                aJson.id = editData.task_id;
+                aJson.text = editData.task_name;
+                aJson.user_name = editData.user_name;
+                aJson.step = editData.step;
+                aJson.completedYn = editData.completedYn;
+                sampleJSON["해야할일"].push(aJson);
+
+            }else if(editData.step === "처리중"){
+
+              var aJson = new Object();
+                aJson.id = editData.task_id;
+                aJson.text = editData.task_name;
+                aJson.user_name = editData.user_name;
+                aJson.step = editData.step;
+                aJson.completedYn = editData.completedYn;
+                sampleJSON["처리중"].push(aJson);
+
+            }else if(editData.step === "보류"){
+              var aJson = new Object();
+                aJson.id = editData.task_id;
+                aJson.text = editData.task_name;
+                aJson.user_name = editData.user_name;
+                aJson.step = editData.step;
+                aJson.completedYn = editData.completedYn;
+                sampleJSON["보류"].push(aJson);
+
+            }else if(editData.step === "완료"){
+              var aJson = new Object();
+                aJson.id = editData.task_id;
+                aJson.text = editData.task_name;
+                aJson.user_name = editData.user_name;
+                aJson.step = editData.step;
+                aJson.completedYn = editData.completedYn;
+                sampleJSON["완료"].push(aJson);
+
+            }
+
+
+         });
+
+         console.log(sampleJSON);
+         setToDos(sampleJSON);
+
 
          //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering
@@ -167,18 +243,26 @@ export default function WorkDetail({ location }) {
         // 항상 실행
     });
 
+
+
+  //useEffect End
   },[]);
 
 
-  const [toDos, setToDos] = useRecoilState(toDoState);
+  
+  //setToDos(toDos);
   //recoilstate는 array를 return 함
   const onDragEnd = (info) => {
+    console.log(info);
+    console.log("info");
+ 
     const { destination, source } = info;
     if (!destination) return;
     //목표 object 없으면 그냥 return
     if (destination?.droppableId === source.droppableId) {
 
       //toDoState 데이터가 들어옴
+
       setToDos((allBoards) => {
         const boardCopy = [...allBoards[source.droppableId]];
         const taskObj = boardCopy[source.index];
@@ -202,6 +286,12 @@ export default function WorkDetail({ location }) {
         const destinationBoard = [...allBoards[destination.droppableId]];
         
         sourceBoard.splice(source.index, 1);
+
+
+        //axios.put
+        console.log(destination.droppableId);
+        console.log("taskobj");
+        //여기서 스탭이동 이벤트 터트리기
         
         destinationBoard.splice(destination?.index, 0, taskObj);
         return {
@@ -236,10 +326,18 @@ export default function WorkDetail({ location }) {
 
           <IconButton color="inherit">
             <Badge color="secondary">
-
-            <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-              User
-            </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  startIcon={<ExitToAppIcon />}
+                  onClick={()=> {
+                    LogUserOut();
+                    history.push(routes.signIn);
+                  }}
+                >
+                  {userName} 님
+              </Button>
             </Badge>
           </IconButton>
 

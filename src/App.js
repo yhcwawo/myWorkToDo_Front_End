@@ -21,7 +21,7 @@ function App() {
      <Router>
             <Switch>
 
-              <Route path={routes.main} exact>
+              <Route path={routes.main}>
               {isLoggedIn ? (
                 <Main />
               ) : (
@@ -74,7 +74,7 @@ function App() {
                   
               </Route>
 
-              <Route path={routes.signIn} >
+              <Route path={routes.signIn} exact>
                   <SignIn />
               </Route>
 

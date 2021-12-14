@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
@@ -5,6 +6,10 @@ import DndCard from "./DndCard";
 import { useSetRecoilState } from "recoil";
 import { toDoState } from "./atom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { user_id_token } from "../auth";
+import { SERVER_URL } from "../config";
+import 'url-search-params-polyfill';
 
 const Wrapper = styled.div`
   width: 300px;
@@ -55,57 +60,89 @@ const Form = styled.form`
 
 function Board({ toDos, boardId }) {
   //console.log(toDos);
+  const {work_id} = useParams();
+  console.log(work_id);
+
+  //axios task
+  const user_id = user_id_token; 
+  let params = new URLSearchParams();
+  const [task_to_date,setTaskToDate] = useState("");
+  const [userName,setUserName] = useState("");
+  const [taskId,setTaskId] = useState("");
+
+  useEffect(()=>{
+  
+    axios.get(`${SERVER_URL}/work/${work_id}`)
+    .then(function (response) {
+         // response  
+         console.log("work result");
+          setTaskToDate(response.data.to_date);
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+  },[]);
+
 
   const setToDos = useSetRecoilState(toDoState);
   //useForm 으로 register에 등록된 변수를 담기
   const { register, setValue, handleSubmit } = useForm();
   const onValid = ({ toDo }) => {
+    //console.log(boardId);
+    //save to mysql db
+
+    params.append('task_name', toDo);
+    params.append('user_id', user_id_token);
+    params.append('step', boardId);
+    params.append('task_index', 0);
+    params.append('user_name', "본인");
+    params.append('work_id', work_id);
+    params.append('completedYn', "N");
+    params.append('task_to_date', task_to_date);
+
+    const headers = {
+      'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Accept': '*/*'
+    }
+
+    axios.post(`${SERVER_URL}/task/post`, params, {headers}).then(function (response) {
+        console.log(response);
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+    axios.get(`${SERVER_URL}/task/top`)
+    .then(function (response) {
+        // response  
+        console.log("task result");
+        console.log(response.data);
+
+        setUserName(response.data.user_name);
+        setTaskId(response.data.task_id);
+
+        console.log(response.data.user_name);
+        console.log(userName);
+
+      }).catch(function (error) {
+          // 오류발생시 실행
+      }).then(function() {
+          // 항상 실행
+   });
+
     const newToDo = {
-      id: Date.now(),
+      id: taskId,//task_id,
       text: toDo,
+      user_name: userName,//user_name ,
+      step: boardId,
+      completedYn: "N",
     };
     setToDos((allBoards) => {
-      // save to mysql db
-      //axios 
-      //ajax form event
-  // let params = new URLSearchParams();
-  // const { register, handleSubmit, getValues } = useForm();
-
-  // const onSubmit = data => {
-  //     const { name, password, email, team } = getValues();
-
-  //     params.append('name', name);
-  //     params.append('password', password);
-  //     params.append('email', email);
-  //     params.append('team', team);
-
-  //     const headers = {
-  //       'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-  //       'Accept': '*/*'
-  //     }
-
-  //     axios.post(`${SERVER_URL}/user/post`, params, {headers}).then(function (response) {
-  //         console.log(response);
-  //         history.push(routes.signIn, {
-  //           message: "Account created. Please log in.",
-  //           name,
-  //           password,
-  //         });
-
-  //     }).catch(function (error) {
-  //         // 오류발생시 실행
-  //     }).then(function() {
-  //         // 항상 실행
-  //     });
-  // };
-  //end
-
-      /* "todos",
-        JSON.stringify({
-          ...allBoards,
-          [boardId]: [newTodo, ...allBoards[boardId]],
-      }) */
-
 
       return {
         ...allBoards,
@@ -114,7 +151,6 @@ function Board({ toDos, boardId }) {
     });
 
   setValue("toDo", "");
-  //console.log(newToDo);
 
   }
   return (
@@ -142,6 +178,8 @@ function Board({ toDos, boardId }) {
                 index={index}
                 toDoId={toDo.id}
                 toDoText={toDo.text}
+                user_name={toDo.user_name}
+                completedYn={toDo.completedYn}
               />
           ))}
           {swipe.placeholder}
