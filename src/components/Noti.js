@@ -18,12 +18,12 @@ export default function Noti({hi}) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>Recent data</Title>
       <Typography component="p" variant="h4">
         {hi}
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
+          {hi}
       </Typography>
       <div>
         <Link color="primary" href="#" onClick={preventDefault}>

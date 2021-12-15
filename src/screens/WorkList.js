@@ -22,9 +22,8 @@ import routes from "../routes";
 import { Button } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import useUser from "../hooks/useUser";
-import { SERVER_URL } from "../config";
+import { SERVER_URL, USER } from "../config";
 import axios from "axios";
-import { user_id_token } from "../auth";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 //data grid for work
@@ -184,7 +183,7 @@ export default function WorkList() {
   const [rowData,setRowData] = useState([]);
   // data part
 
-  const user_id = user_id_token;
+  const user_id = localStorage.getItem(USER);
 
   //didmount
   useEffect(()=>{

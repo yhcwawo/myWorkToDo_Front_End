@@ -11,7 +11,7 @@ import Container from '@material-ui/core/Container';
 import routes from '../routes';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { SERVER_URL } from '../config';
+import { SERVER_URL, USER, TOKEN } from '../config';
 import Input from '../components/Input';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,11 +33,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-
-let userId = "";
-const TOKEN = "TOKEN";
-const USER = "USER";
-
 
 export default function SignIn( ) {
   const classes = useStyles();
@@ -72,8 +67,14 @@ export default function SignIn( ) {
                 alert("아이디나 비밀번호를 확인해주세요.");
              }else{
                 //login
+
+                localStorage.removeItem(TOKEN);
+                localStorage.removeItem(USER);
+
                 localStorage.setItem(USER, result);
                 localStorage.setItem(TOKEN, true);
+
+                history.push(routes.main);
                 history.push(routes.main);
              };
 
@@ -94,15 +95,19 @@ export default function SignIn( ) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component="h2" variant="h2">
+        <Typography component="h3" variant="h3">
+          <strong>
           My work to do
+          </strong>
         </Typography>
 
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h5" variant="h5">
+          <strong>
           로그인
+          </strong>
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
 

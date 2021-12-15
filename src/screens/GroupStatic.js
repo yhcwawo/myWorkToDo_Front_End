@@ -24,7 +24,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios';
-import { SERVER_URL } from '../config';
+import { SERVER_URL, USER } from '../config';
 import { user_id_token } from '../auth';
 import { useHistory } from 'react-router';
 
@@ -159,7 +159,7 @@ export default function GroupStatic() {
 
   const [rowData,setRowData] = useState([]);
   // data part
-  const user_id = user_id_token;
+  const user_id = localStorage.getItem(USER);
 
   //didmount
   useEffect(()=>{

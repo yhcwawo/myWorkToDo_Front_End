@@ -15,7 +15,7 @@ import routes from '../routes';
 export const mainListItems = (
   <div>
 
-    <Link to={routes.main} style={{ textDecoration: 'none' }}>
+    <Link to={routes.main} style={{ textDecoration: 'none',  color:"black" }}>
     <ListItem button>
        
       <ListItemIcon>
@@ -26,7 +26,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
 
-    <Link to={routes.workList} style={{ textDecoration: 'none' }}>
+    <Link to={routes.workList} style={{ textDecoration: 'none',  color:"black" }}>
     <ListItem button>
 
       <ListItemIcon>
@@ -37,7 +37,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
 
-    <Link to={routes.groupList} style={{ textDecoration: 'none' }}>
+    <Link to={routes.groupList} style={{ textDecoration: 'none',  color:"black" }}>
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
@@ -46,7 +46,7 @@ export const mainListItems = (
     </ListItem>
     </Link>
 
-    <Link to={routes.groupStatic} style={{ textDecoration: 'none' }}>
+    <Link to={routes.groupStatic} style={{ textDecoration: 'none',  color:"black" }}>
     <ListItem button>
       <ListItemIcon>
         <BarChartIcon />
@@ -58,6 +58,7 @@ export const mainListItems = (
   </div>
 );
 
+//대기
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Sub menu</ListSubheader>

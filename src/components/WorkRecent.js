@@ -10,7 +10,7 @@ import Title from './Title';
 import routes from '../routes';
 import { Button } from '@material-ui/core';
 import axios from 'axios';
-import { SERVER_URL } from '../config';
+import { SERVER_URL, USER } from '../config';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { user_id_token } from '../auth';
 
@@ -36,7 +36,7 @@ export default function WorkRecent() {
   // data part
   // const { data } = useUser();
   // console.log(data);
-  const user_id = user_id_token;
+  const user_id = localStorage.getItem(USER);
 
  //didmount
  useEffect(()=>{

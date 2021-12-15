@@ -8,7 +8,7 @@ import { toDoState } from "./atom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { user_id_token } from "../auth";
-import { SERVER_URL } from "../config";
+import { SERVER_URL, USER } from "../config";
 import 'url-search-params-polyfill';
 
 const Wrapper = styled.div`
@@ -59,12 +59,10 @@ const Form = styled.form`
 `;
 
 function Board({ toDos, boardId }) {
-  //console.log(toDos);
-  const {work_id} = useParams();
-  console.log(work_id);
 
+  const {work_id} = useParams();
   //axios task
-  const user_id = user_id_token; 
+  const user_id = localStorage.getItem(USER);
   let params = new URLSearchParams();
   const [task_to_date,setTaskToDate] = useState("");
   const [userName,setUserName] = useState("");
@@ -91,11 +89,11 @@ function Board({ toDos, boardId }) {
   //useForm 으로 register에 등록된 변수를 담기
   const { register, setValue, handleSubmit } = useForm();
   const onValid = ({ toDo }) => {
-    //console.log(boardId);
+
     //save to mysql db
 
     params.append('task_name', toDo);
-    params.append('user_id', user_id_token);
+    params.append('user_id', user_id);
     params.append('step', boardId);
     params.append('task_index', 0);
     params.append('user_name', "본인");
@@ -123,11 +121,8 @@ function Board({ toDos, boardId }) {
         console.log("task result");
         console.log(response.data);
 
-        setUserName(response.data.user_name);
+        setUserName(response.data.userName);
         setTaskId(response.data.task_id);
-
-        console.log(response.data.user_name);
-        console.log(userName);
 
       }).catch(function (error) {
           // 오류발생시 실행

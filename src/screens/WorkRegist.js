@@ -24,7 +24,7 @@ import routes from '../routes';
 import { useForm } from "react-hook-form";
 import Input from "../components/Input";
 import axios from "axios";
-import { SERVER_URL } from "../config";
+import { SERVER_URL, USER } from "../config";
 import { user_id_token } from "../auth";
 
 //가로 크기 지정
@@ -145,10 +145,10 @@ export default function WorkRegist() {
   const onSubmit = data => {
       let { name, group_name, user_id, auth,group_number, group_master, team_name, to_date} = getValues();
 
-      user_id = user_id_token; 
+      user_id = localStorage.getItem(USER); 
       auth = '0';
       group_number = 1;
-      group_master = user_id_token;
+      group_master = localStorage.getItem(USER);
 
       params.append('name', name);
       params.append('group_name', group_name);

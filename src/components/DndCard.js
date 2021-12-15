@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -6,29 +6,101 @@ import CheckCircleOutlineTwoToneIcon from '@material-ui/icons/CheckCircleOutline
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { Button, InputAdornment, TextField } from "@material-ui/core";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import 'url-search-params-polyfill';
+import axios from "axios";
+import { SERVER_URL } from "../config";
+import { useHistory, useParams } from "react-router";
+import routes from "../routes";
+
 //dndCard component
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
 `;
 
 const Card = styled.div`
   border-radius: 5px;
-  margin-bottom: 5px;
-  padding: 10px 10px;
-  padding: 10px;
+  margin-bottom: 2px;
+  padding: 5px 5px;
   background-color: ${(props) =>
     props.isDragging ? "#e4f2ff" : "white"};
   box-shadow: ${(props) =>
     props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
-function DndCard({ toDoId, toDoText, index, user_name }) {
+function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
+  const [completedYns,setCompletedYns] = useState(completedYn);
+  const history = useHistory()
+  const {work_id} = useParams();
+  
+  const handleClickDeleteTask = () => {
+    //toDoId == this.task_id
+    let params = new URLSearchParams();
+    params.append('task_id', toDoId);
+
+    const headers = {
+      'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Accept': '*/*'
+    }
+
+    axios.delete(`${SERVER_URL}/task/delete/${toDoId}`, params, {headers}).then(function (response) {
+      console.log("delete");
+      //history.push(`/work/${work_id}`);
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+    //history.replace(`/work/${work_id}`);
+
+    
+
+    
+
+  };
+
+  const handleClickUpdateYn = (completedYn) => {
+
+    console.log(completedYn);
+    
+    let params = new URLSearchParams();
+
+    if(completedYn == "Y"){
+      
+      setCompletedYns("N");
+      params.append('completedYn', "N");
+    }else{
+
+      setCompletedYns("Y");
+      params.append('completedYn', "Y");
+    }
+
+
+    params.append('task_id', toDoId);
+    
+
+    const headers = {
+      'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Accept': '*/*'
+    }
+
+    axios.put(`${SERVER_URL}/task/update/completed`, params, {headers}).then(function (response) {
+        console.log("update");
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+    
+  };
 
   return (
+
     <Draggable draggableId={toDoId.toString()} index={index}>
       {(swipe,snapshot) => (
         <Card
@@ -55,19 +127,24 @@ function DndCard({ toDoId, toDoText, index, user_name }) {
 
         <Container>
           
-        { true ? (
-            <Button>
-            <CheckCircleOutlineTwoToneIcon />
+
+            <Button
+              onClick={() => {
+                handleClickUpdateYn(completedYn);
+              }}
+              color={completedYns ? "primary" : "secondary"}
+            >
+              <CheckCircleOutlineTwoToneIcon />
             </Button>
-          )  :  (
-            <Button>
-            <CheckCircleIcon />
-            </Button>
-          )
-         }
+
          
-         <Button>
-         <DeleteForeverIcon />
+         <Button
+          onClick={() => {
+            handleClickDeleteTask();
+          }}
+          
+         >
+          <DeleteForeverIcon />
          </Button>
 
          </Container>

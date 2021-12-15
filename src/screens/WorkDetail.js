@@ -22,13 +22,14 @@ import { toDoState } from "../components/atom";
 import Board from "../components/Board";
 import TrashBin from "../components/TrashBin";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { SERVER_URL } from "../config";
+import { SERVER_URL, USER } from "../config";
 import axios from "axios";
 import { useHistory } from "react-router";
 import { LogUserOut, user_id_token } from "../auth";
 import { Button } from "@material-ui/core";
 import routes from "../routes";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import 'url-search-params-polyfill';
 
 //box width size
 const drawerWidth = 240;
@@ -135,7 +136,7 @@ const Boards = styled.div`
 export default function WorkDetail({ location }) {
   const classes = useStyles();
   const history = useHistory();
-  const user_id = user_id_token;
+  const user_id = localStorage.getItem(USER);
   const [open, setOpen] = React.useState(true);
   const [userName,setUserName] = useState("");
   let sampleJSON = {
@@ -183,8 +184,6 @@ export default function WorkDetail({ location }) {
          // response  
          console.log("task list");
          const editDatas = response.data;
-         console.log(editDatas);
-
          editDatas.map((editData) => {
 
             if(editData.step === "해야할일"){
@@ -230,11 +229,7 @@ export default function WorkDetail({ location }) {
 
          });
 
-         console.log(sampleJSON);
          setToDos(sampleJSON);
-
-
-         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering
 
     }).catch(function (error) {
@@ -243,25 +238,20 @@ export default function WorkDetail({ location }) {
         // 항상 실행
     });
 
-
-
   //useEffect End
   },[]);
 
-
-  
-  //setToDos(toDos);
   //recoilstate는 array를 return 함
   const onDragEnd = (info) => {
-    console.log(info);
-    console.log("info");
- 
+
     const { destination, source } = info;
+    let params = new URLSearchParams();
     if (!destination) return;
     //목표 object 없으면 그냥 return
     if (destination?.droppableId === source.droppableId) {
 
       //toDoState 데이터가 들어옴
+      //toDoState == recoil data
 
       setToDos((allBoards) => {
         const boardCopy = [...allBoards[source.droppableId]];
@@ -269,7 +259,7 @@ export default function WorkDetail({ location }) {
         boardCopy.splice(source.index, 1);
         //옮긴 테스크 삭제
         boardCopy.splice(destination?.index, 0, taskObj);
-        //옮기고 복구
+        //순서바꾸고 인덱스 복구
         return {
           ...allBoards,
           [source.droppableId]: boardCopy,
@@ -287,10 +277,27 @@ export default function WorkDetail({ location }) {
         
         sourceBoard.splice(source.index, 1);
 
-
         //axios.put
-        console.log(destination.droppableId);
+    
         console.log("taskobj");
+
+        params.append('task_id', taskObj.id);
+        params.append('step', destination.droppableId);
+
+        const headers = {
+          'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': '*/*'
+        }
+
+        axios.put(`${SERVER_URL}/task/update/step`, params, {headers}).then(function (response) {
+            console.log(response);
+
+        }).catch(function (error) {
+            // 오류발생시 실행
+        }).then(function() {
+            // 항상 실행
+        });
+
         //여기서 스탭이동 이벤트 터트리기
         
         destinationBoard.splice(destination?.index, 0, taskObj);

@@ -21,22 +21,26 @@ import WorkRecent from '../components/WorkRecent';
 import Title from '../components/Title';
 import API from '../components/axios';
 import axios from 'axios';
-import { SERVER_URL } from '../config';
+import { SERVER_URL, USER } from '../config';
 import styled from 'styled-components';
-import ListCard from '../components/ListCard';
-import useUser from '../hooks/useUser';
+import useUser from '../hooks/useUser'; 
+import ListCardComplete from '../components/ListCardComplete';
+import ListCardStop from '../components/ListCardStop';
+import ListCardTodo from '../components/ListCardTodo';
+import ListCardWorking from '../components/ListCardWorking';
 
 //logout
 import routes from '../routes';
 import { LogUserOut, user_id_token } from '../auth';
 import { Button } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { PagesSharp } from '@material-ui/icons';
 
 //네비게션바 가로 크기 지정
 const drawerWidth = 240;
 const Wrapper = styled.div`
   display: flex;
-  overflow: hidden;
+
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -130,10 +134,15 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [userName,setUserName] = useState("");
+  //summary
+  const [workingNumber,setworkingNumber] = useState(0);
+  const [completeNumber,setcompleteNumber] = useState(0);
+  const [todoNumber,settodoNumber] = useState(0);
+  const [stopNumber,setStopNumber] = useState(0);
 
   //when start page
   //replace loginvar
-  const user_id = user_id_token;
+  const user_id = localStorage.getItem(USER);
 
   useEffect(()=>{
 
@@ -163,7 +172,34 @@ export default function Dashboard() {
     .then(function (response) {
       // response  
       console.log("static summary");
+      console.log(response.data);
 
+      if(response.data.working_number === undefined || response.data.working_number === null){
+        
+      }else{
+        setworkingNumber(response.data.working_number);
+      }
+      
+      if(response.data.complete_number === undefined || response.data.complete_number === null){
+        
+      }else{
+        setcompleteNumber(response.data.complete_number);
+      }
+
+      if(response.data.todo_number === undefined || response.data.todo_number === null){
+        
+      }else{
+        settodoNumber(response.data.todo_number);
+      }
+
+      if(response.data.stop_number === undefined || response.data.stop_number === null){
+        
+      }else{
+        setStopNumber(response.data.stop_number);
+      }
+
+      //summary data end
+    
     }).catch(function (error) {
       // 오류발생시 실행
     }).then(function() {
@@ -193,7 +229,9 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            메인
+            <strong>
+              메인
+            </strong>
           </Typography>
 
           <IconButton color="inherit">
@@ -250,13 +288,14 @@ export default function Dashboard() {
 
             {/* Group Task Chart */}
             <Grid item xs={12}>
-      
-              <Paper className={fixedHeightPaper}>
                 {/* Summary Card section */}
-                
-              </Paper>
-              
-             
+                <Wrapper>
+                  <ListCardTodo number={todoNumber} />
+                  <ListCardWorking number={workingNumber} />
+                  <ListCardStop number={stopNumber} />
+                  <ListCardComplete number={completeNumber} />
+
+                </Wrapper>
             </Grid>
 
           </Grid>
