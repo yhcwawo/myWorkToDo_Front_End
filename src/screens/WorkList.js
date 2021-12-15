@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,15 +20,14 @@ import { Link } from "react-router-dom";
 import routes from "../routes";
 import { Button } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
-import useUser from "../hooks/useUser";
 import { SERVER_URL, USER } from "../config";
 import axios from "axios";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { LogUserOut } from "../auth";
 
 //data grid for work
 // id == essential value
-//work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
-
 const columns = [
   { field: 'id', 
     headerName: 'id', 
@@ -189,6 +187,23 @@ export default function WorkList() {
   useEffect(()=>{
    //1 call
 
+    //login user info
+    axios.get(`${SERVER_URL}/user/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+      .then(function (response) {
+          console.log(response.data);
+          setUserName(response?.data?.name);
+                
+      }).catch(function (error) {
+
+      }).then(function() {
+
+      });
+    //end
+
     axios.get(`${SERVER_URL}/work/workList/${user_id}`, {
       params: {
         user_id: user_id,
@@ -232,10 +247,18 @@ export default function WorkList() {
 
           <IconButton color="inherit">
             <Badge color="secondary">
-
-            <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-              User
-            </Typography>
+              <Button
+                      variant="contained"
+                      color="secondary"
+                      size="large"
+                      startIcon={<ExitToAppIcon />}
+                      onClick={()=> {
+                        LogUserOut();
+                        history.push(routes.signIn);
+                      }}
+                    >
+                      {userName} 님
+              </Button>
             </Badge>
           </IconButton>
 

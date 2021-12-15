@@ -23,8 +23,8 @@ import { Button } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import { SERVER_URL, USER } from "../config";
 import axios from "axios";
-import { user_id_token } from "../auth";
 import { useHistory } from 'react-router-dom';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 //modal part
 import Dialog from '@material-ui/core/Dialog';
@@ -39,6 +39,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Switch from '@material-ui/core/Switch';
 import Slide from '@material-ui/core/Slide';
+import { LogUserOut } from "../auth";
 
 //data grid for work group
 // id == essential value
@@ -231,7 +232,8 @@ export default function WorkList() {
                 size="small"
                 style={{marginLeft: 16}}
                 onClick={() => {
-                  handleClickOpenRegistModal();
+                  let groupMember =  params.row.group_member;
+                  handleClickOpenRegistModal(groupMember);
                 }}
               >
                 등록
@@ -249,7 +251,8 @@ export default function WorkList() {
                 size="small"
                 style={{marginLeft: 16}}
                 onClick={() => {
-                  handleClickOpenDeleteModal();
+                  let groupId =  params.row.id;
+                  handleClickOpenDeleteModal(groupId);
                 }}
               >
                 삭제
@@ -309,13 +312,28 @@ export default function WorkList() {
          console.log("user list");
          console.log(response.data);
 
-         //setRowData(response.data);
-
     }).catch(function (error) {
         // 오류발생시 실행
     }).then(function() {
         // 항상 실행
     });
+
+    //login user info
+    axios.get(`${SERVER_URL}/user/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+      .then(function (response) {
+          console.log(response.data);
+          setUserName(response?.data?.name);
+                
+      }).catch(function (error) {
+
+      }).then(function() {
+
+      });
+      //end
 
  
 
@@ -345,7 +363,18 @@ export default function WorkList() {
             <Badge color="secondary">
 
             <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-              User
+              <Button
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                    startIcon={<ExitToAppIcon />}
+                    onClick={()=> {
+                      LogUserOut();
+                      history.push(routes.signIn);
+                    }}
+                  >
+                    {userName} 님
+                </Button>
             </Typography>
             </Badge>
           </IconButton>

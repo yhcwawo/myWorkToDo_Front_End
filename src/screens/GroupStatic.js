@@ -25,8 +25,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios';
 import { SERVER_URL, USER } from '../config';
-import { user_id_token } from '../auth';
 import { useHistory } from 'react-router';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 //통계 쿼리 파트
 //drawer 가로 크기 지정
@@ -128,11 +128,6 @@ function createRow(name, daypre4, daypre3, daypre2,daypre1,daytoday,daypost1,day
   return { name, daypre4, daypre3, daypre2,daypre1,daytoday,daypost1,daypost2,daypost3,daypost4 };
 }
 
-//add up
-function subtotal(items) {
-  return items.map(({ daytoday }) => daytoday).reduce((i) => i, 0);
-}
-
 const rows = [
 ];
 
@@ -141,13 +136,15 @@ const rows = [
 // total 통계정보는 전체 테스크 대비 로그인한 사용자의 테스트 비율을 보여줄 예정  - rest api /static getGroupStaticInfo 쓰기
 //axios.get
 //+ 좀 더 고민해보기
-const invoiceSubtotal = subtotal(rows);
-const invoiceTotal = invoiceSubtotal + invoiceSubtotal;
 
 export default function GroupStatic() {
   const classes = useStyles();
   const history = useHistory();
   const [userName,setUserName] = useState("");
+  const [myTaskRatio,setMyTaskRatio] = useState(0);
+  const [allTaskRatio,setAllTaskRatio] = useState(0);
+
+  
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -164,6 +161,7 @@ export default function GroupStatic() {
   //didmount
   useEffect(()=>{
 
+    //grid query
     axios.get(`${SERVER_URL}/static/group/${user_id}`, {
       params: {
         user_id: user_id,
@@ -174,7 +172,7 @@ export default function GroupStatic() {
          console.log("static list");
          console.log(response.data);
          setRowData(response.data);
-         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
+
          // rows rendering
 
     }).catch(function (error) {
@@ -182,6 +180,32 @@ export default function GroupStatic() {
     }).then(function() {
         // 항상 실행
     });
+
+    //total query
+    axios.get(`${SERVER_URL}/static/total/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+    .then(function (response) {
+         // response  
+         console.log("static total");
+         console.log(response.data);
+
+         setMyTaskRatio(response.data.myTaskRatio);
+         setAllTaskRatio(response.data.allTaskRatio);
+
+
+         // total rendering
+
+    }).catch(function (error) {
+        // 오류발생시 실행
+    }).then(function() {
+        // 항상 실행
+    });
+
+
+    
 
   },[]);
   //axios part
@@ -287,13 +311,13 @@ export default function GroupStatic() {
 
                 <TableRow>
                   <TableCell rowSpan={2} />
-                  <TableCell colSpan={8}>전체 대비 나의 테스크 가동률</TableCell>
-                  <TableCell align="right">{ccyFormat(12)+"%"}</TableCell>
+                  <TableCell colSpan={8}>전체 대비 나의 테스크 할당률</TableCell>
+                  <TableCell align="right">{ ccyFormat(myTaskRatio)+"%"}</TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell colSpan={8}>전체 테스크 가동률</TableCell>
-                  <TableCell align="right">{ccyFormat(invoiceTotal)+"%"}</TableCell>
+                  <TableCell colSpan={8}>전체 테스크 완료율</TableCell>
+                  <TableCell align="right">{ ccyFormat(allTaskRatio)+"%"}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

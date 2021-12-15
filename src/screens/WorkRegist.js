@@ -26,6 +26,7 @@ import Input from "../components/Input";
 import axios from "axios";
 import { SERVER_URL, USER } from "../config";
 import { user_id_token } from "../auth";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 //가로 크기 지정
 const drawerWidth = 240;
