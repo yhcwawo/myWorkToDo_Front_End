@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,15 +17,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import { Link, useHistory } from 'react-router-dom';
 import routes from '../routes';
 import { useForm } from "react-hook-form";
 import Input from "../components/Input";
 import axios from "axios";
 import { SERVER_URL, USER } from "../config";
-import { user_id_token } from "../auth";
+import { LogUserOut, user_id_token } from "../auth";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Avatar } from "@material-ui/core";
 
 //가로 크기 지정
 const drawerWidth = 240;
@@ -120,6 +119,10 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 export default function WorkRegist() {
@@ -127,7 +130,6 @@ export default function WorkRegist() {
   const [open, setOpen] = React.useState(true);
   const history = useHistory();
   const [userName,setUserName] = useState("");
-  const user_id = user_id_token;
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -136,6 +138,28 @@ export default function WorkRegist() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   //insert main dashboard part
+  const user_id = localStorage.getItem(USER);
+
+  useEffect(()=>{
+    //1 call
+ 
+     //login user info
+     axios.get(`${SERVER_URL}/user/${user_id}`, {
+       params: {
+         user_id: user_id,
+       }
+     })
+       .then(function (response) {
+           setUserName(response?.data?.name);
+                 
+       }).catch(function (error) {
+ 
+       }).then(function() {
+ 
+       });
+     //end
+ 
+   },[]);
 
   //register db part
   //ajax form event
@@ -166,8 +190,6 @@ export default function WorkRegist() {
       }
 
       axios.post(`${SERVER_URL}/work/post`, params, {headers}).then(function (response) {
-          console.log(response);
-
           //group_work_id == sequence
           paramsGroup.append('group_name', group_name);
           paramsGroup.append('auth', auth);
@@ -210,16 +232,25 @@ export default function WorkRegist() {
           >
             <MenuIcon />
           </IconButton>
+          <Avatar className={classes.avatar} src="/logo192.png" />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            워크 등록
+            <strong>워크 등록</strong>
           </Typography>
 
           <IconButton color="inherit">
             <Badge color="secondary">
-
-            <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-              User
-            </Typography>
+              <Button
+                      variant="contained"
+                      color="secondary"
+                      size="large"
+                      startIcon={<ExitToAppIcon />}
+                      onClick={()=> {
+                        LogUserOut();
+                        history.push(routes.signIn);
+                      }}
+                    >
+                      {userName} 님
+              </Button>
             </Badge>
           </IconButton>
 

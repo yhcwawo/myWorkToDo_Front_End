@@ -10,10 +10,8 @@ import 'url-search-params-polyfill';
 import axios from "axios";
 import { SERVER_URL } from "../config";
 import { useHistory, useParams } from "react-router";
-import routes from "../routes";
 
 //dndCard component
-
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -21,7 +19,7 @@ const Container = styled.div`
 `;
 
 const Card = styled.div`
-  border-radius: 5px;
+  border-radius: 8px;
   margin-bottom: 2px;
   padding: 5px 5px;
   background-color: ${(props) =>
@@ -48,25 +46,18 @@ function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
     axios.delete(`${SERVER_URL}/task/delete/${toDoId}`, params, {headers}).then(function (response) {
       console.log("delete");
       //history.push(`/work/${work_id}`);
+      window.location.replace(`/work/${work_id}`);
 
     }).catch(function (error) {
         // 오류발생시 실행
     }).then(function() {
         // 항상 실행
     });
-
-    //history.replace(`/work/${work_id}`);
-
-    
-
-    
-
   };
 
   const handleClickUpdateYn = (completedYn) => {
 
     console.log(completedYn);
-    
     let params = new URLSearchParams();
 
     if(completedYn == "Y"){
@@ -79,10 +70,8 @@ function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
       params.append('completedYn', "Y");
     }
 
-
     params.append('task_id', toDoId);
     
-
     const headers = {
       'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'Accept': '*/*'
@@ -96,7 +85,6 @@ function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
     }).then(function() {
         // 항상 실행
     });
-    
   };
 
   return (
@@ -126,23 +114,19 @@ function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
          <br />
 
         <Container>
-          
-
-            <Button
+{/*             <Button
               onClick={() => {
                 handleClickUpdateYn(completedYn);
               }}
               color={completedYns ? "primary" : "secondary"}
             >
               <CheckCircleOutlineTwoToneIcon />
-            </Button>
+            </Button> */}
 
-         
          <Button
           onClick={() => {
             handleClickDeleteTask();
           }}
-          
          >
           <DeleteForeverIcon />
          </Button>

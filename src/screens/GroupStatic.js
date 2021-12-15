@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from "styled-components";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -27,6 +26,9 @@ import axios from 'axios';
 import { SERVER_URL, USER } from '../config';
 import { useHistory } from 'react-router';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { LogUserOut } from '../auth';
+import routes from '../routes';
+import { Avatar, Button } from '@material-ui/core';
 
 //통계 쿼리 파트
 //drawer 가로 크기 지정
@@ -115,6 +117,10 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 //소수점 정리
@@ -128,8 +134,6 @@ function createRow(name, daypre4, daypre3, daypre2,daypre1,daytoday,daypost1,day
   return { name, daypre4, daypre3, daypre2,daypre1,daytoday,daypost1,daypost2,daypost3,daypost4 };
 }
 
-const rows = [
-];
 
 // today 기준으로 전후 4일에 대한 통계쿼리 출력
 
@@ -168,13 +172,9 @@ export default function GroupStatic() {
       }
     })
     .then(function (response) {
-         // response  
          console.log("static list");
-         console.log(response.data);
          setRowData(response.data);
-
          // rows rendering
-
     }).catch(function (error) {
         // 오류발생시 실행
     }).then(function() {
@@ -188,14 +188,9 @@ export default function GroupStatic() {
       }
     })
     .then(function (response) {
-         // response  
          console.log("static total");
-         console.log(response.data);
-
          setMyTaskRatio(response.data.myTaskRatio);
          setAllTaskRatio(response.data.allTaskRatio);
-
-
          // total rendering
 
     }).catch(function (error) {
@@ -204,14 +199,26 @@ export default function GroupStatic() {
         // 항상 실행
     });
 
+     //login user info
+     axios.get(`${SERVER_URL}/user/${user_id}`, {
+      params: {
+        user_id: user_id,
+      }
+    })
+      .then(function (response) {
+          setUserName(response?.data?.name);
+      }).catch(function (error) {
 
-    
+      }).then(function() {
+
+      });
+      //end
 
   },[]);
   //axios part
 
-  //main dashboard 랜더링
-  //main은 컨테이너만 잡고 컴포넌트 호출로 2단 구성 할 예정
+  //dashboard 랜더링
+  //main은 컨테이너만 잡고 컴포넌트 호출로 2단 구성
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -227,15 +234,28 @@ export default function GroupStatic() {
           >
             <MenuIcon />
           </IconButton>
+
+          <Avatar className={classes.avatar} src="/logo192.png" />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            그룹 통계
+            <strong>그룹 통계</strong> 
           </Typography>
 
           <IconButton color="inherit">
             <Badge color="secondary">
 
             <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-              User
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                    startIcon={<ExitToAppIcon />}
+                    onClick={()=> {
+                      LogUserOut();
+                      history.push(routes.signIn);
+                    }}
+                >
+                    {userName} 님
+                </Button>
             </Typography>
             </Badge>
           </IconButton>
@@ -295,7 +315,7 @@ export default function GroupStatic() {
               <TableBody>
                 {rowData.map((row) => (
                   <TableRow key={row.name}>
-                    <TableCell>{row.name}</TableCell>
+                    <TableCell><strong>{row.name}</strong></TableCell>
                     <TableCell align="right">{row.daypre4}</TableCell>
                     <TableCell align="right">{row.daypre3}</TableCell>
                     <TableCell align="right">{row.daypre2}</TableCell>
@@ -311,13 +331,13 @@ export default function GroupStatic() {
 
                 <TableRow>
                   <TableCell rowSpan={2} />
-                  <TableCell colSpan={8}>전체 대비 나의 테스크 할당률</TableCell>
-                  <TableCell align="right">{ ccyFormat(myTaskRatio)+"%"}</TableCell>
+                  <TableCell colSpan={8}><strong>전체 대비 나의 테스크 할당률</strong></TableCell>
+                  <TableCell align="right"><strong>{ ccyFormat(myTaskRatio)+"%"}</strong></TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell colSpan={8}>전체 테스크 완료율</TableCell>
-                  <TableCell align="right">{ ccyFormat(allTaskRatio)+"%"}</TableCell>
+                  <TableCell colSpan={8}><strong>전체 테스크 완료율</strong></TableCell>
+                  <TableCell align="right"><strong>{ ccyFormat(allTaskRatio)+"%"}</strong></TableCell>
                 </TableRow>
               </TableBody>
             </Table>

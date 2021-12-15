@@ -8,11 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 import routes from '../routes';
-import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { SERVER_URL, USER } from '../config';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { user_id_token } from '../auth';
 
 // Generate WorkRecent Data
 function createData(id, work_name, group_name, group_leader,team, group_number, created_date, to_date) {
@@ -35,7 +33,6 @@ export default function WorkRecent() {
   const history = useHistory();
   // data part
   // const { data } = useUser();
-  // console.log(data);
   const user_id = localStorage.getItem(USER);
 
  //didmount

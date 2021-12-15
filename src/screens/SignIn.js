@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -13,6 +12,19 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { SERVER_URL, USER, TOKEN } from '../config';
 import Input from '../components/Input';
+import { Modal,Box } from '@material-ui/core';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,8 +51,11 @@ export default function SignIn( ) {
   const history = useHistory();
   const location = useLocation();
 
-    //ajax form event
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
+    //ajax form event
     const { register, handleSubmit, getValues } = useForm({
       mode: "onChange",
       defaultValues: {
@@ -64,7 +79,8 @@ export default function SignIn( ) {
              console.log("LOGIN CHECK");
              const result = response.data.user_id;
              if(result === undefined || result === null){
-                alert("아이디나 비밀번호를 확인해주세요.");
+                handleOpen();
+                //modal
              }else{
                 //login
 
@@ -75,7 +91,7 @@ export default function SignIn( ) {
                 localStorage.setItem(TOKEN, true);
 
                 history.push(routes.main);
-                history.push(routes.main);
+                window.location.replace(`/main`);
              };
 
              
@@ -101,9 +117,8 @@ export default function SignIn( ) {
           </strong>
         </Typography>
 
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <Avatar className={classes.avatar} src="/logo192.png" />
+
         <Typography component="h5" variant="h5">
           <strong>
           로그인
@@ -126,7 +141,7 @@ export default function SignIn( ) {
             color="primary"
             className={classes.submit}
           >
-            로그인
+            <strong>로그인</strong>
           </Button>
           </form>
 
@@ -144,6 +159,24 @@ export default function SignIn( ) {
             </Grid>
            
           </Grid>
+
+          <div>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2" color="secondary">
+                  로그인 에러
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }} color="primary">
+                  아이디와 비밀번호를 확인해주세요.
+                </Typography>
+              </Box>
+            </Modal>
+          </div>
         
       </div>
       

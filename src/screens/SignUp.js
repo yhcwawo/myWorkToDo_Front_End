@@ -78,16 +78,21 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+
+        <Typography component="h3" variant="h3">
+          <strong>
+          My work to do
+          </strong>
+        </Typography>
+        
+        <Avatar className={classes.avatar} src="/logo192.png" />
+
         <Typography component="h1" variant="h5">
-          회원가입
+          <strong>회원가입</strong>
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
 
-          
             <Grid item xs={12}>
               <Input
                 type="text" placeholder="이름을 입력해주세요" {...register("name",{required: true})}
@@ -123,7 +128,7 @@ export default function SignUp() {
             color="primary"
             className={classes.submit}
           >
-            간편 회원가입
+            <strong>간편 회원가입</strong>
             
           </Button>
           </form>

@@ -18,12 +18,9 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from '../components/listItems';
 import { useHistory } from 'react-router-dom';
 import WorkRecent from '../components/WorkRecent';
-import Title from '../components/Title';
-import API from '../components/axios';
 import axios from 'axios';
 import { SERVER_URL, USER } from '../config';
 import styled from 'styled-components';
-import useUser from '../hooks/useUser'; 
 import ListCardComplete from '../components/ListCardComplete';
 import ListCardStop from '../components/ListCardStop';
 import ListCardTodo from '../components/ListCardTodo';
@@ -31,10 +28,9 @@ import ListCardWorking from '../components/ListCardWorking';
 
 //logout
 import routes from '../routes';
-import { LogUserOut, user_id_token } from '../auth';
-import { Button } from '@material-ui/core';
+import { LogUserOut } from '../auth';
+import { Avatar, Button } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { PagesSharp } from '@material-ui/icons';
 
 //네비게션바 가로 크기 지정
 const drawerWidth = 240;
@@ -120,6 +116,10 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 export default function Dashboard() {
@@ -153,7 +153,6 @@ export default function Dashboard() {
     }
   })
   .then(function (response) {
-      console.log(response.data);
       setUserName(response?.data?.name);
             
   }).catch(function (error) {
@@ -172,7 +171,6 @@ export default function Dashboard() {
     .then(function (response) {
       // response  
       console.log("static summary");
-      console.log(response.data);
 
       if(response.data.working_number === undefined || response.data.working_number === null){
         
@@ -208,9 +206,6 @@ export default function Dashboard() {
 
     }, []);
 
-  
-
-
   //main dashboard 랜더링
   //main은 컨테이너만 잡고 컴포넌트 호출로 2단 구성
   return (
@@ -228,6 +223,7 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
+          <Avatar className={classes.avatar} src="/logo192.png" />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             <strong>
               메인

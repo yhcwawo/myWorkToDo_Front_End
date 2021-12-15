@@ -1,4 +1,3 @@
-
 const TOKEN = "TOKEN";
 const USER = "USER";
 
@@ -11,9 +10,7 @@ export const logUserIn = (token) => {
 };
   
 export const LogUserOut = () => {
-
     localStorage.removeItem(TOKEN);
     localStorage.removeItem(USER);
-
 };
   

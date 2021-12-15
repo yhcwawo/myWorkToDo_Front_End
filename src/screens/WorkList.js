@@ -18,13 +18,13 @@ import { mainListItems } from '../components/listItems';
 import { DataGrid } from '@material-ui/data-grid';
 import { Link } from "react-router-dom";
 import routes from "../routes";
-import { Button } from "@material-ui/core";
+import { Avatar, Button } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import { SERVER_URL, USER } from "../config";
 import axios from "axios";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { LogUserOut } from "../auth";
+import { useHistory } from "react-router-dom";
 
 //data grid for work
 // id == essential value
@@ -164,6 +164,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 export default function WorkList() {
@@ -183,7 +187,7 @@ export default function WorkList() {
 
   const user_id = localStorage.getItem(USER);
 
-  //didmount
+  //didamount
   useEffect(()=>{
    //1 call
 
@@ -194,7 +198,6 @@ export default function WorkList() {
       }
     })
       .then(function (response) {
-          console.log(response.data);
           setUserName(response?.data?.name);
                 
       }).catch(function (error) {
@@ -210,11 +213,9 @@ export default function WorkList() {
       }
     })
     .then(function (response) {
-         // response  
          console.log("work list");
          setRowData(response.data);
          setRowData(response.data);
-         //work_id, name, group_name, user_id, auth, group_number, group_master, team_name, created_date, to_date
          // rows rendering
 
     }).catch(function (error) {
@@ -241,8 +242,9 @@ export default function WorkList() {
           >
             <MenuIcon />
           </IconButton>
+          <Avatar className={classes.avatar} src="/logo192.png" />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            나의 워크 리스트
+            <strong>나의 워크 리스트</strong>
           </Typography>
 
           <IconButton color="inherit">

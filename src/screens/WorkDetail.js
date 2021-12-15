@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,13 +20,12 @@ import { mainListItems } from '../components/listItems';
 import { useRecoilState } from "recoil";
 import { toDoState } from "../components/atom";
 import Board from "../components/Board";
-import TrashBin from "../components/TrashBin";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { SERVER_URL, USER } from "../config";
 import axios from "axios";
 import { useHistory } from "react-router";
-import { LogUserOut, user_id_token } from "../auth";
-import { Button } from "@material-ui/core";
+import { LogUserOut } from "../auth";
+import { Avatar, Button } from "@material-ui/core";
 import routes from "../routes";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import 'url-search-params-polyfill';
@@ -111,6 +110,10 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 //detail part
@@ -151,7 +154,7 @@ export default function WorkDetail({ location }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
   const {work_id} = useParams();
   const [toDos, setToDos] = useRecoilState(toDoState);
 
@@ -165,7 +168,6 @@ export default function WorkDetail({ location }) {
       }
     })
       .then(function (response) {
-          console.log(response.data);
           setUserName(response?.data?.name);
                 
       }).catch(function (error) {
@@ -290,7 +292,6 @@ export default function WorkDetail({ location }) {
         }
 
         axios.put(`${SERVER_URL}/task/update/step`, params, {headers}).then(function (response) {
-            console.log(response);
 
         }).catch(function (error) {
             // 오류발생시 실행
@@ -327,8 +328,9 @@ export default function WorkDetail({ location }) {
           >
             <MenuIcon />
           </IconButton>
+          <Avatar className={classes.avatar} src="/logo192.png" />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            워크 상세
+            <strong>워크 상세</strong>
           </Typography>
 
           <IconButton color="inherit">

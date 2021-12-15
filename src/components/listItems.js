@@ -23,6 +23,7 @@ export const mainListItems = (
       </ListItemIcon>
       
       <ListItemText primary="메인" />
+      
     </ListItem>
     </Link>
 
