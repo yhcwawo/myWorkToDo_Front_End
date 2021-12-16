@@ -28,7 +28,7 @@ const Card = styled.div`
     props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
-function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
+function DndCard({ toDoId, toDoText, index, user_name, completedYn, userEmail}) {
   const [completedYns,setCompletedYns] = useState(completedYn);
   const history = useHistory()
   const {work_id} = useParams();
@@ -45,9 +45,7 @@ function DndCard({ toDoId, toDoText, index, user_name, completedYn}) {
 
     axios.delete(`${SERVER_URL}/task/delete/${toDoId}`, params, {headers}).then(function (response) {
       console.log("delete");
-      //history.push(`/work/${work_id}`);
       window.location.replace(`/work/${work_id}`);
-
     }).catch(function (error) {
         // 오류발생시 실행
     }).then(function() {

@@ -64,6 +64,7 @@ function Board({ toDos, boardId }) {
   const [task_to_date,setTaskToDate] = useState("");
   const [userName,setUserName] = useState("");
   const [taskId,setTaskId] = useState("");
+  const [userEmail,setUserEmail] = useState("");
   
   useEffect(()=>{
   
@@ -117,6 +118,9 @@ function Board({ toDos, boardId }) {
         console.log("task result");
         setUserName(response.data.userName);
         setTaskId(response.data.task_id);
+        setUserEmail(response.data.email);
+
+        console.log(response.data.email);
         window.location.replace(`/work/${work_id}`);
 
       }).catch(function (error) {
@@ -131,6 +135,7 @@ function Board({ toDos, boardId }) {
       user_name: userName,//user_name ,
       step: boardId,
       completedYn: "N",
+      userEmail: userEmail,
     };
     setToDos((allBoards) => {
 
@@ -170,6 +175,7 @@ function Board({ toDos, boardId }) {
                 toDoText={toDo.text}
                 user_name={toDo.user_name}
                 completedYn={toDo.completedYn}
+                userEmail={toDo.userEmail}
               />
           ))}
           {swipe.placeholder}

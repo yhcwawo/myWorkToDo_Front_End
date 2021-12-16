@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MediaControlCard({number}) {
   const classes = useStyles();
-
   return (
     <Card className={classes.root}>
       <div className={classes.details}>

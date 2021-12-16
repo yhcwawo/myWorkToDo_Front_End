@@ -27,6 +27,7 @@ import { useHistory } from "react-router";
 import { LogUserOut } from "../auth";
 import { Avatar, Button } from "@material-ui/core";
 import routes from "../routes";
+import Email from "../components/Email";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import 'url-search-params-polyfill';
 
@@ -282,6 +283,7 @@ export default function WorkDetail({ location }) {
         //axios.put
     
         console.log("taskobj");
+        console.log(taskObj);
 
         params.append('task_id', taskObj.id);
         params.append('step', destination.droppableId);
@@ -292,6 +294,21 @@ export default function WorkDetail({ location }) {
         }
 
         axios.put(`${SERVER_URL}/task/update/step`, params, {headers}).then(function (response) {
+
+          //email 발송 이벤트
+          //destination.droppableId
+          if(destination.droppableId == "완료"){
+            console.log(destination.droppableId);
+            let to_email = "ghdcks1018@gmail.com";
+            let task_name = taskObj.text;
+            let to_name = taskObj.user_name;
+
+            Email(to_email, task_name, to_name);
+
+            console.log("mail event");
+          }
+          
+
 
         }).catch(function (error) {
             // 오류발생시 실행
