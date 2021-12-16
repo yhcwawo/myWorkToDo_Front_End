@@ -229,6 +229,7 @@ export default function WorkList() {
 
     axios.delete(`${SERVER_URL}/group/delete/${groupId}`, params, {headers}).then(function (response) {
       console.log("delete");
+      window.location.replace(`/groupList`);
 
     }).catch(function (error) {
         // 오류발생시 실행

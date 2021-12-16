@@ -197,6 +197,7 @@ export default function WorkDetail({ location }) {
                 aJson.user_name = editData.user_name;
                 aJson.step = editData.step;
                 aJson.completedYn = editData.completedYn;
+                aJson.email = editData.email;
                 sampleJSON["해야할일"].push(aJson);
 
             }else if(editData.step === "처리중"){
@@ -207,6 +208,7 @@ export default function WorkDetail({ location }) {
                 aJson.user_name = editData.user_name;
                 aJson.step = editData.step;
                 aJson.completedYn = editData.completedYn;
+                aJson.email = editData.email;
                 sampleJSON["처리중"].push(aJson);
 
             }else if(editData.step === "보류"){
@@ -216,6 +218,7 @@ export default function WorkDetail({ location }) {
                 aJson.user_name = editData.user_name;
                 aJson.step = editData.step;
                 aJson.completedYn = editData.completedYn;
+                aJson.email = editData.email;
                 sampleJSON["보류"].push(aJson);
 
             }else if(editData.step === "완료"){
@@ -225,6 +228,7 @@ export default function WorkDetail({ location }) {
                 aJson.user_name = editData.user_name;
                 aJson.step = editData.step;
                 aJson.completedYn = editData.completedYn;
+                aJson.email = editData.email;
                 sampleJSON["완료"].push(aJson);
 
             }
@@ -281,10 +285,6 @@ export default function WorkDetail({ location }) {
         sourceBoard.splice(source.index, 1);
 
         //axios.put
-    
-        console.log("taskobj");
-        console.log(taskObj);
-
         params.append('task_id', taskObj.id);
         params.append('step', destination.droppableId);
 
@@ -299,7 +299,7 @@ export default function WorkDetail({ location }) {
           //destination.droppableId
           if(destination.droppableId == "완료"){
             console.log(destination.droppableId);
-            let to_email = "ghdcks1018@gmail.com";
+            let to_email = taskObj.email;
             let task_name = taskObj.text;
             let to_name = taskObj.user_name;
 

@@ -106,28 +106,31 @@ function Board({ toDos, boardId }) {
     axios.post(`${SERVER_URL}/task/post`, params, {headers}).then(function (response) {
         console.log(response);
 
+
+
+        axios.get(`${SERVER_URL}/task/top`)
+        .then(function (response) {
+            // response  
+            console.log("task result");
+            setUserName(response.data.userName);
+            setTaskId(response.data.task_id);
+            setUserEmail(response.data.email);
+    
+            window.location.replace(`/work/${work_id}`);
+    
+          }).catch(function (error) {
+              // 오류발생시 실행
+          }).then(function() {
+              // 항상 실행
+       });
+
     }).catch(function (error) {
         // 오류발생시 실행
     }).then(function() {
         // 항상 실행
     });
 
-    axios.get(`${SERVER_URL}/task/top`)
-    .then(function (response) {
-        // response  
-        console.log("task result");
-        setUserName(response.data.userName);
-        setTaskId(response.data.task_id);
-        setUserEmail(response.data.email);
 
-        console.log(response.data.email);
-        window.location.replace(`/work/${work_id}`);
-
-      }).catch(function (error) {
-          // 오류발생시 실행
-      }).then(function() {
-          // 항상 실행
-   });
 
     const newToDo = {
       id: taskId,//task_id,
@@ -135,7 +138,6 @@ function Board({ toDos, boardId }) {
       user_name: userName,//user_name ,
       step: boardId,
       completedYn: "N",
-      userEmail: userEmail,
     };
     setToDos((allBoards) => {
 

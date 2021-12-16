@@ -309,7 +309,7 @@ export default function GroupStatic() {
                   <TableCell align="right">d+1</TableCell>
                   <TableCell align="right">d+2</TableCell>
                   <TableCell align="right">d+3</TableCell>
-                  <TableCell align="right">d+4</TableCell>
+                  <TableCell align="center">d+4</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -324,7 +324,7 @@ export default function GroupStatic() {
                     <TableCell align="right">{row.daypost1}</TableCell>
                     <TableCell align="right">{row.daypost2}</TableCell>
                     <TableCell align="right">{row.daypost3}</TableCell>
-                    <TableCell align="right">{row.daypost4}</TableCell>
+                    <TableCell align="center">{row.daypost4}</TableCell>
              
                   </TableRow>
                 ))}
